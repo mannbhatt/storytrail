@@ -1,0 +1,69 @@
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 1) Load Google fonts (Poppins + Inter + Playfair Display) */
+
+:root{
+  --color-bg: #F0F9FF;
+  --color-primary: #0EA5E9;
+  --color-primary-dark: #0284C7;
+  --color-text: #0F172A;
+  --color-accent: #FACC15;
+}
+
+/* Tailwind Preflight is assumed; add sensible defaults */
+html,body{
+  height:100%;
+}
+
+body{
+  font-family: theme("fontFamily.sans"); /* Tailwind resolves at build time */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Headings */
+h1, .h1 {
+  font-family: "Poppins", Inter, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+h2, .h2 {
+  font-family: "Poppins", Inter, sans-serif;
+  font-weight: 600;
+}
+
+/* Utility: large hero title */
+.hero-title {
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  line-height: 1.02;
+}
+
+/* Cards (story cards) */
+.card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+  overflow: hidden;
+}
+
+/* Buttons: primary */
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+/* Small helpers */
+.small-muted { color: rgba(15,23,42,0.6); font-size: 0.9rem; }
+.container-max { max-width: 1100px; margin-left:auto; margin-right:auto; padding:0 1rem; }

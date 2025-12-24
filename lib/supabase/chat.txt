@@ -1,0 +1,172 @@
+lib/supabase/admin
+
+import { createClient } from "@supabase/supabase-js";
+
+export const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!, // service role required on server
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+);
+
+
+lib/supabase/client.ts
+
+import { createBrowserClient } from "@supabase/ssr";
+
+export function supabaseBrowser() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
+lib/supabase/server.ts
+
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+export function supabaseServer() {
+  const cookieStore = cookies(); // <- NOT async, returns ReadonlyRequestCookies
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        async get(name: string) {
+          return (await cookieStore).get(name)?.value;
+        },
+        async set(name: string, value: string, options: any) {
+          (await cookieStore).set(name, value, options);
+        },
+        async remove(name: string, options: any) {
+          (await cookieStore).delete(name, options);
+        },
+      },
+    }
+  );
+}
+app/api/auth/callback/route.ts
+import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
+
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const code = url.searchParams.get("code");
+
+  if (!code) {
+    return Response.json({ error: "No code found" }, { status: 400 });
+  }
+
+  try {
+    // 👇 FIXED — cookies() must be awaited
+    const cookieStore = await cookies();
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name) {
+            return cookieStore.get(name)?.value;
+          },
+          set(name, value, options) {
+            cookieStore.set({ name, value, ...options });
+          },
+          remove(name, options) {
+            cookieStore.set({ name, value: "", ...options });
+          },
+        },
+      }
+    );
+
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (error) {
+      return Response.json({ error: error.message }, { status: 500 });
+    }
+
+    return Response.redirect("/");
+  } catch (err) {
+    console.error("Callback crash:", err);
+    return Response.json({ error: "Callback route crashed" }, { status: 500 });
+  }
+}
+app/api/auth/google/route.ts
+
+import { supabaseServer } from "@/lib/supabase/server";
+
+export async function GET() {
+  const supabase = supabaseServer();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return Response.json({ error: error.message }, { status: 400 });
+  }
+
+  return Response.redirect(data.url);
+}
+app/api/auth/me/route.ts
+
+import { supabaseServer } from "@/lib/supabase/server";
+
+export async function GET() {
+  try {
+    const supabase = supabaseServer();
+    const { data } = await supabase.auth.getSession();
+    console.log("userdata in me/route",data)
+    return Response.json({
+      user: data.session?.user ?? null,
+    });
+  } catch (err) {
+    console.error("ME ROUTE ERROR:", err);
+    return Response.json({ user: null }, { status: 200 });
+  }
+}
+app/api/auth/logout/route.ts
+
+import { supabaseServer } from "@/lib/supabase/server";
+
+export async function POST() {
+  const supabase = supabaseServer();
+  await supabase.auth.signOut();
+  return Response.json({ success: true });
+}
+app/(auth)/signup/page.tsx
+
+"use client";
+
+import React from "react";
+
+export default function SignupPage() {
+  const handleLogin = () => {
+    // Redirect user to Supabase Google OAuth route
+    window.location.href = "/api/auth/google";
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center mb-6">Sign Up / Login</h1>
+        <button
+          onClick={handleLogin}
+          className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+        >
+          Continue with Google
+        </button>
+      </div>
+    </div>
+  );
+}
+

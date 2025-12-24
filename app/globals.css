@@ -67,3 +67,30 @@ h2, .h2 {
 /* Small helpers */
 .small-muted { color: rgba(15,23,42,0.6); font-size: 0.9rem; }
 .container-max { max-width: 1100px; margin-left:auto; margin-right:auto; padding:0 1rem; }
+
+/* Hide scrollbar for mobile swiper */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Trending Stories Swiper Styles */
+.trending-stories-swiper .swiper-pagination {
+  bottom: 0 !important;
+}
+
+.trending-stories-swiper .swiper-pagination-bullet {
+  background: var(--color-primary);
+  opacity: 0.3;
+}
+
+.trending-stories-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+.trending-stories-swiper .swiper-slide {
+  height: auto;
+}

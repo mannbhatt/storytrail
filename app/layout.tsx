@@ -1,7 +1,11 @@
 // app/layout.tsx
+
 import "./globals.css";
 import type { Metadata } from "next";
-
+import { AuthProvider } from "@/components/providers/AuthProvider"
+import Header from "@/components/header";
+import MobileBottomNav from "@/components/bottom-nav";
+import Footer from "@/components/footer";
 export const metadata: Metadata = {
   title: "StoryTrail — Discover Hidden Stories",
   description: "Find unexplored stories from cities, villages, myths, and local legends.",
@@ -20,9 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       <body className="bg-background text-textDark font-sans">
         {/* You will add header here later */}
-
-        <main className="min-h-screen container-max">{children}</main>
-
+  <AuthProvider>      
+<Header/>
+        <main className=" ">{children}</main>
+        <Footer/>
+        <MobileBottomNav />
+        </AuthProvider>
         {/* You will add footer here later */}
       </body>
     </html>

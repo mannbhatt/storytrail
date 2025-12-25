@@ -5,7 +5,7 @@ import { X } from "lucide-react"
 interface StoryForm {
   coverImagePreview: string
   title: string
-  excerpt: string
+  subtitle: string
   content: string
   city: string
   state: string
@@ -58,8 +58,8 @@ export default function StoryPreview({ story, onClose }: StoryPreviewProps) {
           )}
 
           {/* Excerpt */}
-          {story.excerpt && (
-            <p className="text-lg text-muted-foreground italic mb-6 pb-6 border-b border-border">{story.excerpt}</p>
+          {story.subtitle && (
+            <p className="text-lg text-muted-foreground italic mb-6 pb-6 border-b border-border">{story.subtitle}</p>
           )}
 
           {/* Content */}

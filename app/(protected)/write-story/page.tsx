@@ -1,12 +1,12 @@
 "use client"
 
 import type React from "react"
-
+import ImgUpload from "@/components/write-story/imgupload"
 import { useState } from "react"
 import { Upload, ChevronDown, AlertCircle, CheckCircle } from "lucide-react"
-import StoryPreview from "@/components/write-story/story-privew"
+import StoryPreview from "@/components/write-story/story-preview"
 
-const CATEGORIES = ["Travel", "Culture", "History", "Legends", "Food"]
+const CATEGORIES = ["Travel", "Culture", "Food", "Spiritual", "Nature", "History"]
 const INDIAN_CITIES = [
   { id: 1, name: "Jaipur", state: "Rajasthan" },
   { id: 2, name: "Varanasi", state: "Uttar Pradesh" },
@@ -19,10 +19,11 @@ const INDIAN_CITIES = [
 ]
 
 interface StoryForm {
-  coverImage: File | null
+  coverImageUrl: string;
+  coverImageKey: string; 
   coverImagePreview: string
   title: string
-  excerpt: string
+  subtitle: string
   content: string
   city: string
   state: string
@@ -36,10 +37,11 @@ interface Notification {
 
 export default function WriteStoryPage() {
   const [form, setForm] = useState<StoryForm>({
-    coverImage: null,
+    coverImageUrl: "",
+  coverImageKey: "" ,
     coverImagePreview: "",
     title: "",
-    excerpt: "",
+    subtitle: "",
     content: "",
     city: "",
     state: "",
@@ -50,46 +52,23 @@ export default function WriteStoryPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [notification, setNotification] = useState<Notification | null>(null)
   const [selectedAction, setSelectedAction] = useState<"draft" | "publish" | null>(null)
+  const handleImageUpload = (url: string) => {
+    setForm((prev) => ({
+      ...prev,
+      coverImageUrl: url,
+    }));
 
-  const characterCount = form.excerpt.length
-  const maxExcerpt = 200
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const preview = event.target?.result as string
-        setForm({
-          ...form,
-          coverImage: file,
-          coverImagePreview: preview,
-        })
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleDragDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const file = e.dataTransfer.files?.[0]
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const preview = event.target?.result as string
-        setForm({
-          ...form,
-          coverImage: file,
-          coverImagePreview: preview,
-        })
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
+  };
+  
+  const handleImageKeyChange = (key: string) => {
+    setForm((prev) => ({
+      ...prev,
+      coverImageKey: key,
+    }));
+  };
+ 
   const validateForm = (): boolean => {
-    if (!form.coverImage) {
+    if (!form.coverImageUrl) {
       showNotification("error", "Please upload a cover image")
       return false
     }
@@ -124,18 +103,6 @@ export default function WriteStoryPage() {
     setIsSubmitting(true)
 
     try {
-      // TODO: Replace with actual API call to Supabase
-      // const formData = new FormData()
-      // formData.append('coverImage', form.coverImage)
-      // formData.append('title', form.title)
-      // formData.append('excerpt', form.excerpt)
-      // formData.append('content', form.content)
-      // formData.append('city', form.city)
-      // formData.append('category', form.category)
-      // formData.append('status', action)
-      // const response = await fetch('/api/stories', { method: 'POST', body: formData })
-
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
       showNotification(
@@ -145,13 +112,13 @@ export default function WriteStoryPage() {
           : "Story published successfully! Check your profile to see it live.",
       )
 
-      // Reset form after successful publish
       if (action === "publish") {
         setForm({
-          coverImage: null,
+          coverImageUrl: "",
+          coverImageKey: "" ,
           coverImagePreview: "",
           title: "",
-          excerpt: "",
+          subtitle: "",
           content: "",
           city: "",
           state: "",
@@ -176,27 +143,25 @@ export default function WriteStoryPage() {
       })
     }
   }
-
+console.log(form.coverImageUrl)
   return (
-    <div className="min-h-screen bg-background pb-32">
-      {/* Header Section */}
-      <div className="bg-gradient-to-b from-primary/5 to-transparent pt-12 pb-8 md:pt-16 md:pb-12">
-        <div className="mx-auto max-w-3xl px-4">
-          <h1 className="text-center font-heading text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Share Your Local Story
-          </h1>
-          <p className="text-center text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
-            Every place has a story. No writing experience needed — just tell it like you would to a friend.
+    <div className="min-h-screen  pb-40">
+      {/* Page Header */}
+      <div className="px-4 py-10 md:py-14  text-center md:text-left">
+        <div className="h-[72px] w-full bg-yellow"/>
+        <div className="mx-auto max-w-5xl">
+          <h1 className="font-poppins text-4xl md:text-5xl font-bold text-foreground mb-3">Write Your Story</h1>
+          <p className="font-inter text-lg text-slate-600 max-w-2xl md:max-w-none">
+            Share your experience, place, and emotions with the world
           </p>
         </div>
       </div>
 
-      {/* Main Form */}
-      <div className="mx-auto max-w-3xl px-4 py-8">
-        {/* Notification */}
-        {notification && (
+      {/* Notification */}
+      {notification && (
+        <div className="mx-auto max-w-5xl px-4 mb-6">
           <div
-            className={`mb-6 p-4 rounded-lg flex items-center gap-3 animate-in fade-in ${
+            className={`p-4 rounded-lg flex items-center gap-3 animate-in fade-in ${
               notification.type === "success"
                 ? "bg-green-50 border border-green-200 text-green-800"
                 : notification.type === "error"
@@ -209,135 +174,64 @@ export default function WriteStoryPage() {
             {notification.type === "info" && <AlertCircle className="w-5 h-5 flex-shrink-0" />}
             <span className="text-sm font-medium">{notification.message}</span>
           </div>
-        )}
-
-        {/* Cover Image Upload */}
-        <div className="mb-8">
-          <label className="block font-heading font-semibold text-foreground mb-3">Cover Image</label>
-          <div
-            onDrop={handleDragDrop}
-            onDragOver={(e) => e.preventDefault()}
-            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-              form.coverImagePreview ? "border-primary bg-primary/5" : "border-border hover:border-primary"
-            }`}
-          >
-            {form.coverImagePreview ? (
-              <div className="space-y-4">
-                <img
-                  src={form.coverImagePreview || "/placeholder.svg"}
-                  alt="Cover preview"
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={() => document.getElementById("cover-input")?.click()}
-                  className="text-primary hover:text-primary-dark font-medium text-sm"
-                >
-                  Replace Image
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <Upload className="w-12 h-12 mx-auto text-muted-foreground" />
-                <div>
-                  <p className="font-medium text-foreground mb-1">Drag and drop your image here</p>
-                  <p className="text-sm text-muted-foreground mb-3">or</p>
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById("cover-input")?.click()}
-                    className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium text-sm hover:bg-primary-dark transition-colors"
-                  >
-                    Choose File
-                  </button>
-                </div>
-                <p className="text-xs text-muted-foreground">JPG, PNG up to 5MB</p>
-              </div>
-            )}
-            <input id="cover-input" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">This image will be shown on story cards and story pages</p>
         </div>
+      )}
 
-        {/* Story Title */}
-        <div className="mb-8">
-          <label className="block font-heading font-semibold text-foreground mb-2">Story Title</label>
-          <input
-            type="text"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            placeholder="A night that changed everything in Jaisalmer"
-            className="w-full px-4 py-3 border border-border rounded-lg font-heading text-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card"
-          />
-        </div>
-
-        {/* Excerpt */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <label className="font-heading font-semibold text-foreground">Story Excerpt</label>
-            <span className="text-xs text-muted-foreground">
-              {characterCount}/{maxExcerpt}
-            </span>
-          </div>
-          <textarea
-            value={form.excerpt}
-            onChange={(e) => setForm({ ...form, excerpt: e.target.value.slice(0, maxExcerpt) })}
-            placeholder="A short preview of your story that will appear on story cards"
-            maxLength={maxExcerpt}
-            className="w-full px-4 py-3 border border-border rounded-lg font-sans text-sm h-20 resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card"
-          />
-          <p className="text-xs text-muted-foreground mt-2">Short preview shown on cards and listings</p>
-        </div>
-
-        {/* Story Content */}
-        <div className="mb-8">
-          <label className="block font-heading font-semibold text-foreground mb-2">Your Story</label>
-          <textarea
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-            placeholder="Start writing your story here…"
-            className="w-full px-4 py-3 border border-border rounded-lg font-sans text-sm min-h-64 resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card"
-          />
-        </div>
-
-        {/* Location & Category */}
+      {/* Main Form Content */}
+      <div className="mx-auto max-w-5xl px-4">
+        {/* Cover Image & Story Title Section */}
         <div className="grid md:grid-cols-2 gap-8 mb-8">
-          {/* Location */}
-          <div>
-            <label className="block font-heading font-semibold text-foreground mb-2">City or Village</label>
-            <div className="relative">
-              <select
-                value={form.city}
-                onChange={handleCityChange}
-                className="w-full px-4 py-3 border border-border rounded-lg font-sans text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card appearance-none cursor-pointer"
-              >
-                <option value="">Select a city or village…</option>
-                {INDIAN_CITIES.map((city) => (
-                  <option key={city.id} value={city.name}>
-                    {city.name}, {city.state}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            </div>
-            {form.state && (
-              <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-semibold">State:</span> {form.state}
-              </p>
-            )}
-          </div>
+          {/* Left: Cover Image Upload */}
+          <div className="relative">
+ 
+          <ImgUpload
+        onUploadComplete={handleImageUpload}
+        onImageKeyChange={handleImageKeyChange}
+        initialImage={form.coverImageUrl}
+        initialImageKey={form.coverImageKey}
+      />
+</div>
 
-          {/* Category */}
+          {/* Right: Title & Subtitle */}
+          <div className="flex flex-col justify-center space-y-6">
+            <div>
+              <label className="block font-poppins font-semibold text-foreground mb-2">Story Title</label>
+              <input
+                type="text"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                placeholder="A night that changed everything in Jaisalmer"
+                className="w-full px-4 py-3 border border-slate-200 rounded-lg font-poppins text-xl font-semibold focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 transition-all bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-poppins font-semibold text-foreground mb-2">Subtitle</label>
+              <input
+                type="text"
+                value={form.subtitle}
+                onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
+                placeholder="A brief description of what your story is about"
+                className="w-full px-4 py-3 border border-slate-200 rounded-lg font-inter text-base focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 transition-all bg-white"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Metadata Section */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          {/* Left: Category Selector */}
           <div>
-            <label className="block font-heading font-semibold text-foreground mb-2">Category</label>
+            <label className="block font-poppins font-semibold text-foreground mb-3">Category</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setForm({ ...form, category: cat })}
-                  className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+                  className={`px-4 py-2 rounded-full font-inter font-medium text-sm transition-all ${
                     form.category === cat
-                      ? "bg-primary text-primary-foreground shadow-md"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      ? "bg-sky-400 text-white shadow-md"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
                   {cat}
@@ -345,48 +239,83 @@ export default function WriteStoryPage() {
               ))}
             </div>
           </div>
+
+          {/* Right: Place / City Selector */}
+          <div>
+            <label className="block font-poppins font-semibold text-foreground mb-2">Place / City / Village</label>
+            <div className="relative">
+              <select
+                value={form.city}
+                onChange={handleCityChange}
+                className="w-full px-4 py-3 border border-slate-200 rounded-lg font-inter text-base focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 transition-all bg-white appearance-none cursor-pointer"
+              >
+                <option value="">Select a place…</option>
+                {INDIAN_CITIES.map((city) => (
+                  <option key={city.id} value={city.name}>
+                    {city.name}, {city.state}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            </div>
+            {form.state && (
+              <p className="text-sm text-slate-600 mt-2 font-inter">
+                <span className="font-semibold">State:</span> {form.state}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Author Preview */}
-        <div className="bg-card border border-border rounded-lg p-6 mb-8">
-          <p className="font-heading font-semibold text-foreground mb-4">Author Preview</p>
+        {/* Story Content Section */}
+        <div className="mb-8">
+          <label className="block font-poppins font-semibold text-foreground mb-2">Your Story</label>
+          <textarea
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            placeholder="Start writing your story here…"
+            className="w-full px-4 py-3 border border-slate-200 rounded-lg font-inter text-base min-h-80 resize-none focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 transition-all bg-white"
+          />
+          <p className="text-xs text-slate-500 mt-2">Tell your story naturally, as if you're speaking to a friend</p>
+        </div>
+
+        {/* Author Preview Section */}
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8">
+          <p className="font-poppins font-semibold text-foreground mb-4">Author Preview</p>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white font-heading font-bold">
+            <div className="w-14 h-14 bg-gradient-to-br from-sky-400 to-sky-600 rounded-full flex items-center justify-center text-white font-poppins font-bold flex-shrink-0">
               ST
             </div>
             <div>
-              <p className="font-heading font-semibold text-foreground">Story Contributor</p>
-              <p className="text-sm text-muted-foreground">contributor@storytrail.com</p>
-              <p className="text-xs text-muted-foreground mt-1">This story will be published under your profile</p>
+              <p className="font-poppins font-semibold text-foreground">Story Contributor</p>
+              <p className="text-sm font-inter text-slate-600">contributor@storytrail.com</p>
+              <p className="text-xs font-inter text-slate-500 mt-1">This story will be published under your profile</p>
             </div>
           </div>
         </div>
 
-        {/* Preview Button (Desktop) */}
         <div className="hidden md:block mb-8">
           <button
             onClick={() => setShowPreview(true)}
-            className="w-full px-6 py-3 border border-primary text-primary font-medium rounded-lg hover:bg-primary/5 transition-colors"
+            className="w-full px-6 py-3 border-2 border-sky-400 text-sky-600 font-poppins font-semibold rounded-lg hover:bg-sky-50 transition-colors"
           >
             Preview Story
           </button>
         </div>
       </div>
 
-      {/* Sticky Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-xl">
-        <div className="mx-auto max-w-3xl px-4 py-4 flex gap-3 justify-between">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-slate-100 shadow-2xl">
+        <div className="mx-auto max-w-5xl px-4 py-4 flex gap-3 justify-end md:justify-center">
           <button
             onClick={() => handleSubmit("draft")}
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 border border-border text-foreground font-medium rounded-lg hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 border-2 border-slate-300 text-slate-700 font-poppins font-semibold rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting && selectedAction === "draft" ? "Saving…" : "Save Draft"}
           </button>
 
           <button
             onClick={() => setShowPreview(true)}
-            className="flex-1 px-6 py-3 border border-border text-foreground font-medium rounded-lg hover:bg-muted transition-colors md:hidden"
+            className="px-6 py-3 border-2 border-slate-300 text-slate-700 font-poppins font-semibold rounded-lg hover:bg-slate-50 transition-colors md:hidden"
           >
             Preview
           </button>
@@ -394,7 +323,7 @@ export default function WriteStoryPage() {
           <button
             onClick={() => handleSubmit("publish")}
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-sky-500 text-white font-poppins font-semibold rounded-lg hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting && selectedAction === "publish" ? "Publishing…" : "Publish Story"}
           </button>

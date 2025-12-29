@@ -97,28 +97,43 @@ export default function Imgupload({
       )}
 
       {/* Preview state */}
-      {
-	imageUrl && (
-        <div className="flex flex-col items-center gap-3">
-          <div className="relative h-40 w-40 overflow-hidden rounded-lg border">
-            <Image
-              src={imageUrl}
-              alt="Uploaded image"
-              fill
-              className="object-cover"
-		
-            />
-          </div>
+      
+	{/* Preview state */}
+{imageUrl && (
+  <div className="flex flex-col items-center gap-3">
+    <div className="relative h-40 w-full  overflow-hidden rounded-lg border group">
+      
+      {/* Image */}
+      <Image
+        src={imageUrl}
+        alt="Uploaded image"
+        fill
+        sizes="160px"
+        className="object-cover "
+      />
 
-          <button
-            type="button"
-            onClick={handleRemove}
-            className="rounded-md bg-destructive px-3 py-1 text-sm text-destructive-foreground hover:opacity-90 transition"
-          >
-            Remove image
-          </button>
-        </div>
-      )}
+      {/* ❌ Remove button (top-right X) */}
+      <button
+        type="button"
+        onClick={handleRemove}
+        className="
+          absolute right-2 top-2
+          z-10
+          flex h-7 w-7 items-center justify-center
+          rounded-full
+          bg-black/70 text-white
+          hover:bg-red-600
+          transition
+          opacity-0 group-hover:opacity-100
+        "
+        aria-label="Remove image"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

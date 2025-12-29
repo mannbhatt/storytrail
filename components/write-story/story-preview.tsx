@@ -6,10 +6,7 @@ interface StoryForm {
   coverImagePreview: string
   title: string
   subtitle: string
-  content: string
-  city: string
-  state: string
-  category: string
+  content: string  
 }
 
 interface StoryPreviewProps {
@@ -38,24 +35,24 @@ export default function StoryPreview({ story, onClose }: StoryPreviewProps) {
             />
           )}
 
-          {/* Category Badge */}
+          {/* Category Badge
           {story.category && (
             <span className="inline-block px-3 py-1 bg-accent/20 text-accent-foreground rounded-full text-xs font-semibold mb-4">
               {story.category}
             </span>
-          )}
+          )} */}
 
           {/* Title */}
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
             {story.title || "Your Story Title"}
           </h1>
 
-          {/* Location */}
+          {/* Location 
           {story.city && (
             <p className="text-muted-foreground text-sm font-medium mb-6">
               {story.city}, {story.state}
             </p>
-          )}
+          )}*/}
 
           {/* Excerpt */}
           {story.subtitle && (
@@ -71,7 +68,7 @@ export default function StoryPreview({ story, onClose }: StoryPreviewProps) {
             ))}
           </div>
 
-          {/* Author Section */}
+          {/* Author Section 
           <div className="mt-12 pt-6 border-t border-border">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white font-heading font-bold text-sm">
@@ -82,7 +79,7 @@ export default function StoryPreview({ story, onClose }: StoryPreviewProps) {
                 <p className="text-xs text-muted-foreground">contributor@storytrail.com</p>
               </div>
             </div>
-          </div>
+          </div>*/}
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { Pen, ArrowRight, BookOpen } from "lucide-react"
@@ -14,31 +13,6 @@ export default function StoriesPage() {
        <Hero/>
         <StoriesList/>       
      <section className="py-16 lg:py-20">
-=======
-import { useState,useEffect, useMemo } from "react";
-import Link from "next/link";
-import { Pen, ArrowRight, BookOpen } from "lucide-react";
-import Hero from "@/components/stories/HeroStory";
-import StoriesList from "@/components/stories/StoriesList";
-import { useSearchParams } from "next/navigation";
-
-export default function StoriesPage() {
-  const searchParams = useSearchParams();
-  const locationFromURL = searchParams.get("location");
-   const searchFromURL = searchParams.get("search") || "";
-  //console.log("Location from URL:", locationFromURL);
-
-  const [search, setSearch] = useState("");
-  useEffect(() => {
-    setSearch(searchFromURL);
-  }, [searchFromURL]);
- // console.log("Search term:", search, setSearch);
-  return (
-    <div className="min-h-screen bg-background">
-      <Hero search={search} onSearch={setSearch} />
-      <StoriesList search={search} initialLocation={locationFromURL} />
-      <section className="py-16 lg:py-20">
->>>>>>> 0c9b617 (mvp done)
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-primary to-primaryDark rounded-3xl shadow-xl p-8 lg:p-12 text-center text-white">
             <h2 className="font-heading text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 lg:mb-6">

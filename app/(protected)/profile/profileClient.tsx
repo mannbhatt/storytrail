@@ -7,12 +7,18 @@ import { User } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+// In profileClient.tsx
 interface Story {
-  id: number
-  image: string
-  title: string
-  city: string
-  subtitle: string
+  id: number;
+  slug: string;
+  title: string;
+  subtitle: string;
+  city: string;
+  image: string;
+  user: {
+    name: string;
+    avatar: string | null;
+  };
 }
 
 interface Props {
@@ -21,6 +27,7 @@ interface Props {
 }
 
 export default function UserProfile({ user, stories }: Props) {
+  console.log("stories",stories)
   const router = useRouter()
   const [signingOut, setSigningOut] = useState(false)
 
@@ -148,6 +155,7 @@ export default function UserProfile({ user, stories }: Props) {
                   key={story.id}
                   story={{
                     id: story.id,
+                    slug:story.slug,
                     image: story.image,
                     title: story.title,
                     city: story.city,
@@ -169,6 +177,7 @@ export default function UserProfile({ user, stories }: Props) {
                   key={story.id}
                   story={{
                     id: story.id,
+                    slug:story.slug,
                     image: story.image,
                     title: story.title,
                     city: story.city,

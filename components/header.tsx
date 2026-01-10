@@ -1,16 +1,26 @@
 "use client";
 
 import { useAuth } from "@/components/providers/AuthProvider"
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, X, Menu, User,Pen,BookOpen ,ChevronRight,Store} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Home,Search, X, Menu, User, Pen, BookOpen, ChevronRight, Store } from "lucide-react";
 
 
 export default function TripotoHeader() {
-  const { session, loading } = useAuth()
+  const { session, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/stories?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -63,15 +73,16 @@ useEffect(() => {
 
           {/* Mobile Search Bar */}
           <div className="px-2 pb-2">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
-
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-white font-body text-textDark rounded-md px-10 py-2 text-sm shadow-sm focus:ring-2 focus:ring-primaryDark outline-none"
                 placeholder="Search stories..."
               />
-            </div>
+            </form>
           </div>
         </div>
 
@@ -128,26 +139,28 @@ useEffect(() => {
           </Link>
 
           <nav className="flex items-center gap-10 font-medium text-lg">
-
-
-            <Link href="/stories" className="text-white hover:text-accent transition">
-              Stories
+ <span className=" flex items-center gap-2 font-medium ">
+            <Link href="/" className="flex items-center text-white hover:text-accent transition">
+              <div className="flex items-center"><Home className="w-4 h-4  text-white hover:text-accent transition mr-1" />Home</div>
             </Link>
-            <Link href="/search" className="text-white hover:text-accent transition">
-              Search
+           </span>
+        <span className=" flex items-center gap-2 font-medium ">
+            <Link href="/stories" className="flex items-center text-white hover:text-accent transition">
+              <div className="flex items-center"><BookOpen className="w-4 h-4  text-white hover:text-accent transition mr-1" />Stories</div>
             </Link>
-            <Link href="/places" className="text-white hover:text-accent transition">
-              Places
+           </span>
+          
+           <span className=" flex items-center gap-2 font-medium ">
+            <Link href="/about" className="flex items-center text-white hover:text-accent transition">
+             <div className="flex items-center"><Store className="w-4 h-4  text-white hover:text-accent transition mr-1" />  About</div>
             </Link>
-            <Link href="/about" className="text-white hover:text-accent transition">
-              About
-            </Link>
+           </span>
             </nav>
             <span className=" flex items-center gap-2 font-medium ">
             { session ? (<Link href="/profile" className="flex items-center text-white hover:text-accent transition">
-              <User className="w-4 h-4  text-white" />  Profile
+              <User className="w-4 h-4  text-white mr-1" />  Profile
             </Link>):(<Link href="/signup" className="flex items-center text-white hover:text-accent transition">
-              <User className="w-4 h-4  text-white" />  Sign in
+              <User className="w-4 h-4  text-white mr-1" />  Sign in
             </Link>)
 		
 		}
@@ -157,7 +170,7 @@ useEffect(() => {
               href={`${session ? '/write-story' : 'signup'}`}
               className="flex items-center gap-2 bg-accent text-textDark px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition"
             >
-             <Pen className="w-4 h-4 font-semibold text-textDark " /> Write Story
+             <Pen className="w-4 h-4 font-semibold text-textDark  " /> Write Story
             </Link>
             </span>
           

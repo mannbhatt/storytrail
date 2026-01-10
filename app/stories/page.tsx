@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+<<<<<<< HEAD
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { Pen, ArrowRight, BookOpen } from "lucide-react"
@@ -13,18 +14,44 @@ export default function StoriesPage() {
        <Hero/>
         <StoriesList/>       
      <section className="py-16 lg:py-20">
+=======
+import { useState,useEffect, useMemo } from "react";
+import Link from "next/link";
+import { Pen, ArrowRight, BookOpen } from "lucide-react";
+import Hero from "@/components/stories/HeroStory";
+import StoriesList from "@/components/stories/StoriesList";
+import { useSearchParams } from "next/navigation";
+
+export default function StoriesPage() {
+  const searchParams = useSearchParams();
+  const locationFromURL = searchParams.get("location");
+   const searchFromURL = searchParams.get("search") || "";
+  //console.log("Location from URL:", locationFromURL);
+
+  const [search, setSearch] = useState("");
+  useEffect(() => {
+    setSearch(searchFromURL);
+  }, [searchFromURL]);
+ // console.log("Search term:", search, setSearch);
+  return (
+    <div className="min-h-screen bg-background">
+      <Hero search={search} onSearch={setSearch} />
+      <StoriesList search={search} initialLocation={locationFromURL} />
+      <section className="py-16 lg:py-20">
+>>>>>>> 0c9b617 (mvp done)
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-primary to-primaryDark rounded-3xl shadow-xl p-8 lg:p-12 text-center text-white">
             <h2 className="font-heading text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 lg:mb-6">
               Every Place Has a Story
             </h2>
             <p className="text-lg lg:text-xl text-blue-100 mb-8 lg:mb-10 max-w-2xl mx-auto">
-              Share your local story and help preserve culture and memories for future generations
+              Share your local story and help preserve culture and memories for
+              future generations
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/write"
+                href="/write-story"
                 className="inline-flex items-center justify-center gap-2 bg-accent text-textDark px-8 py-4 rounded-full font-semibold text-base lg:text-lg hover:bg-yellow-400 transition-all duration-300 hover:scale-105 shadow-lg"
               >
                 <Pen className="w-5 h-5" />
@@ -42,5 +69,5 @@ export default function StoriesPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

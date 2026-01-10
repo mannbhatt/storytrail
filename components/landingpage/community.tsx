@@ -2,48 +2,48 @@
 
 import { MapPin, Users, Heart, Compass,Share, BookOpen } from "lucide-react"
 import Image from "next/image"
-
+import Link from "next/link"
 const topContributors = [
   {
     id: 1,
-    name: "Priya Sharma",
+    name: "Sophia Patel",
     location: "Mumbai, Maharashtra",
     storiesCount: 24,
-    image: "https://cdn.pixabay.com/photo/2018/10/29/21/46/human-3782189_960_720.jpg",
+    image: "https://cdn.pixabay.com/photo/2016/11/08/15/21/user-1808597_1280.png",
     rank: 1,
   },
   {
     id: 2,
-    name: "Rajesh Kumar",
+    name: "Rohan Jain",
     location: "Jaipur, Rajasthan",
     storiesCount: 18,
-    image: "https://cdn.pixabay.com/photo/2018/10/29/21/46/human-3782189_960_720.jpg",
+    image: "https://cdn.pixabay.com/photo/2016/11/08/15/21/user-1808597_1280.png",
     rank: 2,
   },
   {
     id: 3,
-    name: "Anjali Mehta",
+    name: "Aishwarya Bhaskar",
     location: "Kochi, Kerala",
     storiesCount: 15,
-    image: "https://cdn.pixabay.com/photo/2018/10/29/21/46/human-3782189_960_720.jpg",
+    image: "https://cdn.pixabay.com/photo/2016/11/08/15/21/user-1808597_1280.png",
     rank: 3,
   },
   {
     id: 4,
-    name: "Arjun Singh",
+    name: "Sahil Singh",
     location: "Varanasi, UP",
     storiesCount: 12,
-    image: "https://cdn.pixabay.com/photo/2018/10/29/21/46/human-3782189_960_720.jpg",
+    image: "https://cdn.pixabay.com/photo/2016/11/08/15/21/user-1808597_1280.png",
     rank: 4,
   },
 ]
 
 export default function CommunityEngagement() {
   return (
-    <section className="py-12 lg:py-16 ">
+    <section className="py-12 lg:py-16 " >
       <div className="container mx-auto  px-4 lg:px-8 max-w-[82rem]">
         {/* Section 1: Share Your Local Story */}
-        <div className="mb-24 lg:mb-32 bg-primary rounded-3xl shadow-lg overflow-hidden">
+        <div id="community" className="mb-24 lg:mb-32 bg-primary rounded-3xl shadow-lg overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center p-8 lg:p-12">
             {/* Left: Text + Buttons */}
             <div className="text-center lg:text-left space-y-6">
@@ -55,12 +55,12 @@ export default function CommunityEngagement() {
                 <p className="text-pretty">No writing experience needed — just tell it like you would to a friend.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                <button className="flex items-center gap-2 bg-primaryDark hover:bg-primaryDark text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Link href="/write-story" className="flex items-center gap-2 bg-primaryDark hover:bg-primaryDark text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <Share className="w-4 h-4 font-seminbold text-white" />Share a Story
-                </button>
-                <button className="bg-accent hover:bg-yellow-400 text-textDark border-2 border-accent font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105">
+                </Link>
+                <Link href="/about#howitworks" className="bg-accent hover:bg-yellow-400 text-textDark border-2 border-accent font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105">
                   Learn How It Works
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -115,7 +115,7 @@ export default function CommunityEngagement() {
         </div>
 
         {/* Section 3: Top Contributors This Month */}
-        <div>
+        <div id="top-contributors">
           <h3 className="font-heading text-3xl lg:text-4xl font-semibold text-textDark mb-12 text-center">
             Top Contributors This Month
           </h3>

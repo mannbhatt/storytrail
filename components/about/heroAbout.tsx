@@ -1,19 +1,10 @@
 "use client";
 
-import { Search } from "lucide-react";
-import React from "react";
-
-interface HeroProps {
-  search: string;
-  onSearch: (value: string) => void;
-}
-
-export default function Hero({ search, onSearch }: HeroProps) {
+export default function HeroAbout() {
   return (
     <section className="relative w-full bg-black text-white">
       <div className="relative h-[340px] lg:h-[450px]">
-        <img
-          src="https://cdn.pixabay.com/photo/2022/06/13/14/58/road-7260175_1280.jpg"
+        <img          src="https://cdn.pixabay.com/photo/2022/05/28/21/44/carpathians-7228042_1280.jpg"
           alt="Stories across India"
           className="h-full w-full object-cover object-[50%_40%]"
         />
@@ -23,25 +14,14 @@ export default function Hero({ search, onSearch }: HeroProps) {
 
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-[64px]  px-4 text-center">
           <h1 className="font-heading text-white text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
-            Stories from Across <span className="text-accent">India</span>
+            About <span className="text-accent">Us</span>
           </h1>
           <p className="mt-3 max-w-2xl text-base text-gray-200 sm:text-lg hidden lg:block">
-            Real experiences, legends, and moments shared by people
+           A community-driven platform for discovering and sharing local stories, cultural heritage, and places that shape our cities and lives.
           </p>
 
           {/* Search Bar */}
-          <div className="mt-6 w-full max-w-3xl px-2 sm:px-4 hidden lg:block">
-            <div className="relative">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => onSearch(e.target.value)}
-                placeholder="Search stories, places, cultures or experiences"
-                className="h-12 w-full rounded-full border border-white/15 bg-white/95 pr-12 pl-5 text-sm text-gray-900 shadow-lg outline-none placeholder:text-gray-500 backdrop-blur transition focus:border-accent focus:ring-2 focus:ring-accent/60"
-              />
-              <Search className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-600" />
-            </div>
-          </div>
+          
 
           {/* Category Chips */}
           {/* Swiper Chips for small/medium screens (sm/md) 

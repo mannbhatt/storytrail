@@ -7,6 +7,7 @@ export async function GET(req: Request) {
     const search = url.searchParams.get("search")?.trim()
     const categoryId = url.searchParams.get("categoryId")
     const locationId = url.searchParams.get("locationId")
+const limit = Number(url.searchParams.get("limit"))
 
     const supabase = supabaseServer()
 
@@ -53,7 +54,7 @@ export async function GET(req: Request) {
     }
 
     const { data, error } = await query
-
+ if (limit) query = query.limit(limit)
     if (error) {
       console.error("Supabase error:", error)
       return NextResponse.json({ stories: [] }, { status: 200 })

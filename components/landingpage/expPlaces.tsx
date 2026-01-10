@@ -1,79 +1,34 @@
-"use client"
-
-import { useState } from "react"
-import Image from "next/image"
+"use client";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface Place {
-  id: number
-  image: string
-  placeName: string
-  stateName: string
-  storyCount: number
+  location_id: number;
+  image: string;
+  placeName: string;
+  stateName: string;
+  storyCount: number;
 }
 
-const places: Place[] = [
-  {
-    id: 1,
-    image: "https://cdn.pixabay.com/photo/2014/03/08/09/27/jodhpur-282944_960_720.jpg 1x, https://cdn.pixabay.com/photo/2014/03/08/09/27/jodhpur-282944_1280.jpg",
-    placeName: "Jaipur",
-    stateName: "Rajasthan",
-    storyCount: 24,
-  },
-  {
-    id: 2,
-    image: "https://cdn.pixabay.com/photo/2020/02/10/08/00/zzz-4835647_960_720.jpg",
-    placeName: "Goa",
-    stateName: "Goa",
-    storyCount: 18,
-  },
-  {
-    id: 3,
-    image: "https://cdn.pixabay.com/photo/2020/04/28/12/29/manali-5104279_960_720.jpg",
-    placeName: "Manali",
-    stateName: "Himachal Pradesh",
-    storyCount: 15,
-  },
-  {
-    id: 4,
-    image: "https://cdn.pixabay.com/photo/2020/12/26/14/16/cremation-5861582_960_720.jpg",
-    placeName: "Varanasi",
-    stateName: "Uttar Pradesh",
-    storyCount: 22,
-  },
-  {
-    id: 5,
-    image: "https://cdn.pixabay.com/photo/2022/12/09/16/22/munnar-7645637_960_720.jpg",
-    placeName: "Munnar",
-    stateName: "Kerala",
-    storyCount: 12,
-  },
- {
-    id: 6,
-    image: "https://cdn.pixabay.com/photo/2014/03/08/09/27/jodhpur-282944_960_720.jpg 1x, https://cdn.pixabay.com/photo/2014/03/08/09/27/jodhpur-282944_1280.jpg",
-    placeName: "Jaipur",
-    stateName: "Rajasthan",
-    storyCount: 24,
-  },
-  {
-    id: 7,
-    image: "https://cdn.pixabay.com/photo/2020/02/10/08/00/zzz-4835647_960_720.jpg",
-    placeName: "Goa",
-    stateName: "Goa",
-    storyCount: 18,
-  },
-  {
-    id: 8,
-    image: "https://cdn.pixabay.com/photo/2020/04/28/12/29/manali-5104279_960_720.jpg",
-    placeName: "Manali",
-    stateName: "Himachal Pradesh",
-    storyCount: 15,
-  },
-  
-]
-
 export default function ExplorePlaces() {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [places, setPlaces] = useState<any[]>([]);
 
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const res = await fetch("/api/places");
+        const data = await res.json();
+        setPlaces(data.places || []);
+        console.log("ExplorePlaces places:", data.places);
+      } catch (err) {
+        console.error("Failed to fetch places", err);
+      }
+    };
+    fetchPlaces();
+  }, []);
+  console.log("ExplorePlaces places:", places);
   return (
     <section className=" py-12 lg:py-16">
       <div className="container mx-auto px-4">
@@ -82,14 +37,16 @@ export default function ExplorePlaces() {
           <h2 className=" text-2xl lg:text-4xl font-semibold text-textDark mb-3">
             Explore Cities & Villages
           </h2>
-          <p className="text-slate-600 text-base md:text-lg font-body">Hidden stories from across India</p>
+          <p className="text-slate-600 text-base md:text-lg font-body">
+            Hidden stories from across India
+          </p>
         </div>
 
         {/* Desktop Grid - Hidden on Mobile */}
         <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
           {places.map((place) => (
             <PlaceCard
-              key={place.id}
+              key={`${place.location_id}`}
               place={place}
               isHovered={hoveredCard === place.id}
               onHover={() => setHoveredCard(place.id)}
@@ -102,7 +59,7 @@ export default function ExplorePlaces() {
         <div className="grid grid-cols-2 gap-4 md:hidden">
           {places.map((place) => (
             <PlaceCard
-              key={place.id}
+              key={`${place.location_id}`}
               place={place}
               isHovered={hoveredCard === place.id}
               onHover={() => setHoveredCard(place.id)}
@@ -113,23 +70,35 @@ export default function ExplorePlaces() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 interface PlaceCardProps {
-  place: Place
-  isHovered: boolean
-  onHover: () => void
-  onLeave: () => void
-  isMobile?: boolean
+  place: Place;
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
+  isMobile?: boolean;
 }
 
-function PlaceCard({ place, isHovered, onHover, onLeave, isMobile = false }: PlaceCardProps) {
+function PlaceCard({
+  place,
+  isHovered,
+  onHover,
+  onLeave,
+  isMobile = false,
+}: PlaceCardProps) {
+  const router = useRouter();
   return (
     <div
       className={`bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
         isHovered ? "shadow-2xl -translate-y-1" : "shadow-md hover:shadow-xl"
       }`}
+      onClick={() =>
+        router.push(
+          `/stories?location=${encodeURIComponent(place.location_id)}`
+        )
+      }
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
@@ -157,7 +126,11 @@ function PlaceCard({ place, isHovered, onHover, onLeave, isMobile = false }: Pla
         </h3>
 
         {/* State Name */}
-        <p className={`text-slate-600 font-body mb-3 line-clamp-1 ${isMobile ? "text-xs" : "text-sm"}`}>
+        <p
+          className={`text-slate-600 font-body mb-3 line-clamp-1 ${
+            isMobile ? "text-xs" : "text-sm"
+          }`}
+        >
           {place.stateName}
         </p>
 
@@ -168,11 +141,15 @@ function PlaceCard({ place, isHovered, onHover, onLeave, isMobile = false }: Pla
               isMobile ? "text-xs" : "text-sm"
             }`}
           >
-            <span className="font-semibold text-slate-900">{place.storyCount}</span>
-            <span className="ml-1 text-slate-700">{place.storyCount === 1 ? "Story" : "Stories"}</span>
+            <span className="font-semibold text-slate-900">
+              {place.storyCount}
+            </span>
+            <span className="ml-1 text-slate-700">
+              {place.storyCount === 1 ? "Story" : "Stories"}
+            </span>
           </span>
         </div>
       </div>
     </div>
-  )
+  );
 }

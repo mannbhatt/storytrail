@@ -1,8 +1,17 @@
 "use client"
 
 import { Search } from "lucide-react"
-
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 export default function Hero() {
+   const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState("")
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/stories?search=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
   return (
    <> <section className="relative bg-white">
       <div className="relative h-[340px] lg:h-[450px]">
@@ -27,6 +36,8 @@ export default function Hero() {
       <input
         type="text"
         placeholder="Search stories, places, legends or experiences"
+         value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         className="
           flex-1 
           text-textDark 
@@ -39,6 +50,7 @@ export default function Hero() {
 
       {/* Search Button */}
       <button
+     onClick={handleSearch}
         className=""
         aria-label="Search"
       >

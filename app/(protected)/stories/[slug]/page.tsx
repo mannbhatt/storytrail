@@ -7,12 +7,13 @@ import Link from "next/link"
 
 
 
-export default async function StoryDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+export default async function StoryDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   
-    const res=await fetch(`http://localhost:3000/api/stories/${slug}`)
-    const data=await res.json()
-    if (!data) return { title: "Story Not Found" }
+  const res = await fetch(`http://localhost:3000/api/stories/${slug}`);
+  const data = await res.json();
+  
+  if (!data) notFound();
 
     console.log("story data",data)
   

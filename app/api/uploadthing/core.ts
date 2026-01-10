@@ -1,10 +1,11 @@
 
 import { createUploadthing } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
+import { NextRequest } from "next/server";
 
 const f = createUploadthing();
 
-const auth = (req) => ({ id: "fakeId" });
+const auth = (req: NextRequest) => ({ id: "fakeId" });
 
 export const ourFileRouter = {
   imageUploader: f({
@@ -23,4 +24,8 @@ export const ourFileRouter = {
       console.log("file url", file.url);
       return { uploadedBy: metadata.userId };
     }),
-};
+} as const;
+
+type FileRouter = typeof ourFileRouter;
+
+export type { FileRouter };

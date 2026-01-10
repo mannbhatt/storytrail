@@ -20,6 +20,13 @@ const nextConfig: NextConfig = {
         hostname:"a2buwabb1g.ufs.sh",
         pathname:"/**",
       },
+      {
+        protocol: "https",
+        hostname: "thumbs.dreamstime.com"
+      },
+      { protocol: "https",
+        hostname: "www.google.com"
+      },
       ],
      },
   

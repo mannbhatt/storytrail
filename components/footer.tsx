@@ -1,14 +1,82 @@
 "use client"
 
-import { useState } from "react"
+import { useState,useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Instagram, Facebook, Twitter, Youtube, Linkedin, ChevronDown, Heart } from "lucide-react"
-
+interface Category {
+  id: number
+  name: string
+  slug: string
+}
+interface Location {
+  id: number
+  city: string
+  state: string
+}
 export default function Footer() {
+  const router = useRouter()
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
-
+  const [categories, setCategories] = useState<Category[]>([])
+  const [locations, setLocations] = useState<Location[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      const [categoriesRes, locationsRes] = await Promise.all([
+        fetch('/api/categories'),
+        fetch('/api/locations')
+      ]);
+      if (!categoriesRes.ok || !locationsRes.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const categoriesData = await categoriesRes.json();
+      const locationsData = await locationsRes.json();
+      
+      setCategories(categoriesData.categories || []);
+      setLocations(locationsData.locations || []);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, []);
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }))
   }
+  const handleCategoryClick = (categoryId: number) => {
+    router.push(`/stories?category=${categoryId}`)
+  }
+  const handleLocationClick = (locationId: number) => {
+    router.push(`/stories?location=${locationId}`)
+  }
+ 
+  // Show loading state
+  if (loading) {
+    return (
+      <footer className="bg-primary text-white">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center py-8">Loading...</div>
+        </div>
+      </footer>
+    )
+  }
+  // Show error state
+  if (error) {
+    return (
+      <footer className="bg-primary text-white">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center py-8 text-red-300">{error}</div>
+        </div>
+      </footer>
+    )
+  }
+ 
 
   return (
     <footer className="bg-primary text-white">
@@ -100,22 +168,18 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="/team" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                  <a href="https://www.clueless.builders/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-300 hover:text-accent transition-colors">
                     Our Team
                   </a>
                 </li>
                 <li>
-                  <a href="/careers" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Careers
+                  <a href="/about#howitworks" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                  How It Works
                   </a>
                 </li>
+                
                 <li>
-                  <a href="/press" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Press & Media
-                  </a>
-                </li>
-                <li>
-                  <a href="/contact" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                  <a href="/about#contact" className="text-sm text-gray-300 hover:text-accent transition-colors">
                     Contact Us
                   </a>
                 </li>
@@ -124,46 +188,21 @@ export default function Footer() {
           </div>
 
           {/* Categories Section */}
-          <div className="border-b border-gray-700 md:border-none pb-4 md:pb-0">
-            <button
-              onClick={() => toggleSection("categories")}
-              className="flex items-center justify-between w-full md:cursor-default"
-            >
-              <h4 className="text-base font-semibold font-heading mb-0 md:mb-4">Categories</h4>
-              <ChevronDown
-                className={`w-5 h-5 md:hidden transition-transform ${openSections["categories"] ? "rotate-180" : ""}`}
-              />
-            </button>
-            <nav className={`${openSections["categories"] ? "block" : "hidden"} md:block mt-3 md:mt-0`}>
+          <div>
+              <h4 className="text-base font-semibold font-heading mb-4">Categories</h4>
               <ul className="space-y-2">
-                <li>
-                  <a href="/adventure" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Adventure Travel
-                  </a>
-                </li>
-                <li>
-                  <a href="/heritage" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Heritage Sites
-                  </a>
-                </li>
-                <li>
-                  <a href="/food" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Food & Culture
-                  </a>
-                </li>
-                <li>
-                  <a href="/weekend" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Weekend Getaways
-                  </a>
-                </li>
-                <li>
-                  <a href="/offbeat" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Offbeat Places
-                  </a>
-                </li>
+                {categories.slice(0, 5).map((category) => (
+                  <li key={category.id}>
+                    <button
+                      onClick={() => handleCategoryClick(category.id)}
+                      className="text-sm text-gray-300 hover:text-accent transition-colors text-left w-full"
+                    >
+                      {category.name}
+                    </button>
+                  </li>
+                ))}
               </ul>
-            </nav>
-          </div>
+            </div>
 
           {/* Places Section */}
           <div className="border-b border-gray-700 md:border-none pb-4 md:pb-0">
@@ -178,31 +217,16 @@ export default function Footer() {
             </button>
             <nav className={`${openSections["places"] ? "block" : "hidden"} md:block mt-3 md:mt-0`}>
               <ul className="space-y-2">
-                <li>
-                  <a href="/places/goa" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Goa
-                  </a>
-                </li>
-                <li>
-                  <a href="/places/kerala" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Kerala
-                  </a>
-                </li>
-                <li>
-                  <a href="/places/rajasthan" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Rajasthan
-                  </a>
-                </li>
-                <li>
-                  <a href="/places/himachal" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Himachal Pradesh
-                  </a>
-                </li>
-                <li>
-                  <a href="/places/uttarakhand" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Uttarakhand
-                  </a>
-                </li>
+                {locations.slice(0, 5).map((location) => (
+                  <li key={location.id}>
+                    <button
+                      onClick={() => handleLocationClick(location.id)}
+                      className="text-sm text-gray-300 hover:text-accent transition-colors text-left w-full"
+                    >
+                      {`${location?.city}, ${location?.state}`}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </nav>
           </div>
@@ -221,23 +245,23 @@ export default function Footer() {
             <nav className={`${openSections["community"] ? "block" : "hidden"} md:block mt-3 md:mt-0`}>
               <ul className="space-y-2">
                 <li>
-                  <a href="/write" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                  <a href="/write-story" className="text-sm text-gray-300 hover:text-accent transition-colors">
                     Write a Story
                   </a>
                 </li>
+                 <li>
+                  <a href="/about#ourvision" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                   Our Vision
+                  </a>
+                </li>
                 <li>
-                  <a href="/contribute" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                  <a href="/about#community" className="text-sm text-gray-300 hover:text-accent transition-colors">
                     Become a Contributor
                   </a>
                 </li>
                 <li>
-                  <a href="/guidelines" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Community Guidelines
-                  </a>
-                </li>
-                <li>
-                  <a href="/forum" className="text-sm text-gray-300 hover:text-accent transition-colors">
-                    Forum
+                  <a href="/about#top-contributors" className="text-sm text-gray-300 hover:text-accent transition-colors">
+                    Top Contributors
                   </a>
                 </li>
               </ul>

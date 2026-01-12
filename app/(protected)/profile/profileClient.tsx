@@ -23,11 +23,12 @@ interface Story {
 
 interface Props {
   user: User
-  stories: Story[]
+  stories?: Story[]
+  loading?: boolean
 }
 
-export default function UserProfile({ user, stories }: Props) {
-  console.log("stories",stories)
+export default function UserProfile({ user, stories = [], loading = false }: Props) {
+
   const router = useRouter()
   const [signingOut, setSigningOut] = useState(false)
 
@@ -56,19 +57,13 @@ export default function UserProfile({ user, stories }: Props) {
       setSigningOut(false)
     }
   }
+console.log("stories", stories)
+  
 
-  const handleEdit = (storyId: number) => {
-    // You can open a modal or redirect to an edit page
-    console.log("Edit story:", storyId)
-  }
-
-  const handleDelete = (storyId: number) => {
-    // You can open a confirmation dialog here
-    console.log("Delete story:", storyId)
-  }
+  
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-neutral-100 via-neutral-50 to-neutral-200">
+    <div className="min-h-screen ">
       {/* ============== PROFILE HEADER ============== */}
       <section className="relative bg-primaryDark h-[340px] lg:h-[450px] flex items-center justify-center overflow-hidden shadow-2xl">
         {/* Decorative background effect & background image */}
@@ -118,20 +113,20 @@ export default function UserProfile({ user, stories }: Props) {
       {/* ============== USER STORIES ============== */}
       <main className="max-w-7xl mx-auto px-4 py-10 sm:py-12 md:py-16">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-          <h2 className="font-heading text-2xl md:text-3xl font-bold text-primaryDark tracking-tight">
+          <h2 className="font-heading text-2xl md:text-3xl font-semibold text-black tracking-tight">
            Stories
           </h2>
           <button
             onClick={handleLogout}
             disabled={signingOut}
-            className="inline-block px-6 py-2 rounded-xl bg-primaryDark text-white font-semibold shadow hover:bg-accent hover:text-textDark transition-colors disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+            className="inline-block px-6 py-2 rounded-xl bg-accent text-black font-semibold shadow hover:bg-accent hover:text-textDark transition-colors disabled:opacity-60 disabled:cursor-not-allowed text-md"
           >
             {signingOut ? "Logging out..." : "Log out"}
           </button>
         </div>
 
         {stories.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-white/60 rounded-2xl shadow-inner">
+          <div className="flex flex-col items-center justify-center py-24 bg-background rounded-2xl shadow-inner">
             <Image
               src="/empty-state.svg"
               alt="No stories yet"
@@ -146,6 +141,21 @@ export default function UserProfile({ user, stories }: Props) {
               Start sharing your adventures with the world!
             </span>
           </div>
+        ) : loading ? (
+          <>
+            {/* Desktop Grid Skeleton */}
+            <div className="hidden lg:grid lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <StoryCard key={i} loading={true} />
+              ))}
+            </div>
+            {/* Tablet/Mobile Grid Skeleton */}
+            <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <StoryCard key={i} loading={true} />
+              ))}
+            </div>
+          </>
         ) : (
           <>
             {/* Desktop Grid */}
@@ -159,14 +169,14 @@ export default function UserProfile({ user, stories }: Props) {
                     image: story.image,
                     title: story.title,
                     city: story.city,
+                   
                     subtitle: story.subtitle,
                     author: {
                       name,
                       avatar,
                     },
                   }}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                
                 />
               ))}
             </div>
@@ -177,7 +187,7 @@ export default function UserProfile({ user, stories }: Props) {
                   key={story.id}
                   story={{
                     id: story.id,
-                    slug:story.slug,
+                        slug: story.slug,
                     image: story.image,
                     title: story.title,
                     city: story.city,
@@ -187,8 +197,7 @@ export default function UserProfile({ user, stories }: Props) {
                       avatar,
                     },
                   }}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                
                 />
               ))}
             </div>

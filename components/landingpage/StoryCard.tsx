@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
-import { Share2, Edit, Trash2 } from "lucide-react";
+
 import Link from "next/link";
+
+import { Skeleton } from "@/components/ui/Skeleton";
 
 interface Story {
   id: number;
@@ -17,23 +19,63 @@ interface Story {
 }
 
 interface StoryCardProps {
-  story: Story;
-  onEdit?: (storyId: number) => void;
-  onDelete?: (storyId: number) => void;
+  story?: Story;
+  
+  loading?: boolean;
 }
 
-export default function StoryCard({ story, onEdit, onDelete }: StoryCardProps) {
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEdit?.(story.id);
-  };
+export default function StoryCard({ story, loading = false }: StoryCardProps) {
+  
+  
+  // Return early if no story and not loading
+  if (!story && !loading) {
+    return null;
+  }
+  
+ 
+  if (loading) {
+    return (
+      <>
+        {/* Desktop Skeleton */}
+        <div className="hidden lg:block overflow-hidden rounded-lg bg-white shadow-md">
+          <div className="relative aspect-video overflow-hidden">
+            <Skeleton className="h-full w-full" />
+          </div>
+          <div className="p-4">
+            <Skeleton className="mb-2 h-6 w-3/4" />
+            <Skeleton className="mb-3 h-3 w-1/2" />
+            <Skeleton className="mb-4 h-4 w-full" />
+            <Skeleton className="mb-2 h-4 w-5/6" />
+            <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-8 w-8 rounded-full" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          </div>
+        </div>
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete?.(story.id);
-  };
-
-  const showActions = onEdit || onDelete;
+        {/* Mobile Skeleton */}
+        <div className="lg:hidden">
+          <div className="flex gap-3 overflow-hidden rounded-lg bg-white p-3 shadow-md">
+            <Skeleton className="h-20 w-20 flex-shrink-0 rounded-md" />
+            <div className="flex flex-1 flex-col justify-between">
+              <Skeleton className="mb-2 h-4 w-3/4" />
+              <Skeleton className="mb-2 h-3 w-1/2" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+  
+  if (!story) return null;
   return (
     <>
       {/* Desktop Card Layout - Hidden on mobile */}
@@ -46,6 +88,7 @@ export default function StoryCard({ story, onEdit, onDelete }: StoryCardProps) {
               alt={story.title}
               fill
               className="object-cover "
+              unoptimized={true}
             />
           </div>
 
@@ -66,11 +109,7 @@ export default function StoryCard({ story, onEdit, onDelete }: StoryCardProps) {
 
             {/* Author Row */}
             <div
-              className={`mt-4 ${
-                showActions
-                  ? "flex items-center justify-between pt-3 border-t border-slate-100"
-                  : "flex items-center gap-2"
-              }`}
+              className={"mt-4 flex items-center gap-2"}
             >
               <div className="flex items-center gap-2">
                 <div className="relative h-8 w-8 overflow-hidden rounded-full">
@@ -85,34 +124,7 @@ export default function StoryCard({ story, onEdit, onDelete }: StoryCardProps) {
                   {story.author?.name}
                 </span>
               </div>
-              {showActions && (
-                <div className="flex items-center gap-1">
-                  {onEdit && (
-                    <button
-                      onClick={handleEdit}
-                      className="p-2 hover:bg-blue-50 rounded-full transition-colors group/edit"
-                      title="Edit story"
-                    >
-                      <Edit className="w-4 h-4 text-slate-500 group-hover/edit:text-primary" />
-                    </button>
-                  )}
-                  {onDelete && (
-                    <button
-                      onClick={handleDelete}
-                      className="p-2 hover:bg-red-50 rounded-full transition-colors group/delete"
-                      title="Delete story"
-                    >
-                      <Trash2 className="w-4 h-4 text-slate-500 group-hover/delete:text-red-600" />
-                    </button>
-                  )}
-                  <button
-                    className="p-2 hover:bg-slate-100 rounded-full transition-colors"
-                    title="Share story"
-                  >
-                    <Share2 className="w-4 h-4 text-slate-500" />
-                  </button>
-                </div>
-              )}
+             
             </div>
           </div>
         </Link>
@@ -151,9 +163,7 @@ export default function StoryCard({ story, onEdit, onDelete }: StoryCardProps) {
 
             {/* Author Row + Actions (side by side if showActions) */}
             <div
-              className={` mt-1 flex items-center gap-2${
-                showActions ? " justify-between" : ""
-              }`}
+              className={" mt-1 flex items-center gap-2 justify-between"}
             >
               <div className="flex items-center gap-2">
                 <div className="relative h-6 w-6 overflow-hidden rounded-full">
@@ -168,34 +178,7 @@ export default function StoryCard({ story, onEdit, onDelete }: StoryCardProps) {
                   {story.author?.name}
                 </span>
               </div>
-              {showActions && (
-                <div className="flex items-center gap-1">
-                  {onEdit && (
-                    <button
-                      onClick={handleEdit}
-                      className="p-2 hover:bg-blue-50 rounded-full transition-colors active:scale-95"
-                      title="Edit story"
-                    >
-                      <Edit className="w-4 h-4 text-slate-500" />
-                    </button>
-                  )}
-                  {onDelete && (
-                    <button
-                      onClick={handleDelete}
-                      className="p-2 hover:bg-red-50 rounded-full transition-colors active:scale-95"
-                      title="Delete story"
-                    >
-                      <Trash2 className="w-4 h-4 text-slate-500" />
-                    </button>
-                  )}
-                  <button
-                    className="p-2 hover:bg-slate-100 rounded-full transition-colors active:scale-95"
-                    title="Share story"
-                  >
-                    <Share2 className="w-4 h-4 text-slate-500" />
-                  </button>
-                </div>
-              )}
+              
             </div>
           </div>
         </Link>

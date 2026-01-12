@@ -5,6 +5,8 @@ import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-mo
 import Image from "next/image"
 import { Heart, MessageCircle, Eye, MapPin, X, Check } from "lucide-react"
 import Link from "next/link"
+import { Skeleton } from "@/components/ui/Skeleton"
+
 interface Story {
   id: number
   title: string
@@ -28,16 +30,17 @@ interface Story {
 }
 
 interface StoryCardProps {
-  story: Story
+  story?: Story
   index: number
   totalCards: number
   onSwipe: (direction: "left" | "right") => void
   isTop: boolean
+  loading?: boolean
 }
 
 const SWIPE_THRESHOLD = 120
 
-function StoryCard({ story, index, totalCards, onSwipe, isTop }: StoryCardProps) {
+function StoryCard({ story, index, totalCards, onSwipe, isTop, loading = false }: StoryCardProps) {
   const x = useMotionValue(0)
   const opacity = useTransform(x, [-300, 0, 300], [0, 1, 0])
   const likeOpacity = useTransform(x, [0, SWIPE_THRESHOLD], [0, 1])
@@ -54,6 +57,51 @@ function StoryCard({ story, index, totalCards, onSwipe, isTop }: StoryCardProps)
       onSwipe(xValue > 0 ? "right" : "left")
     }
   }, [onSwipe, x])
+
+  if (loading || !story) {
+    return (
+      <motion.div
+        className="absolute w-full h-full rounded-2xl overflow-hidden shadow-lg"
+        style={{
+          scale: cardScale,
+          y: cardYOffset,
+          zIndex: cardZIndex,
+        }}
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: cardScale, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        <div className="relative w-full h-full">
+          <Skeleton className="h-full w-full" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <div className="flex items-center gap-2 mb-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            
+            <Skeleton className="mb-2 h-8 w-3/4" />
+            <Skeleton className="mb-4 h-4 w-full" />
+            <Skeleton className="mb-2 h-4 w-5/6" />
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-4 w-8" />
+                <Skeleton className="h-4 w-8" />
+                <Skeleton className="h-4 w-8" />
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-8 w-8 rounded-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
 
   return (
     <motion.div
@@ -82,6 +130,7 @@ function StoryCard({ story, index, totalCards, onSwipe, isTop }: StoryCardProps)
           fill
           className="object-cover"
           priority
+          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
         
@@ -195,8 +244,8 @@ export default function StoriesSwiper() {
       // Remove the swiped story from the stack
       setStories(prev => prev.filter(story => story.id !== storyId))
       
-      // Here you can add logic to handle the swipe action (like/skip)
-      // For example, you might want to send an API call to update the story's like count
+      // Here you can add logic to handle swipe action (like/skip)
+      // For example, you might want to send an API call to update story's like count
       if (direction === "right") {
         // Like action
         await fetch(`/api/stories/${storyId}/like`, { method: 'POST' })
@@ -208,8 +257,26 @@ export default function StoriesSwiper() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="animate-pulse text-lg">Loading stories...</div>
+      <div className="h-screen relative overflow-hidden bg-gray-100">
+        <div className="max-w-md mx-auto h-full flex flex-col">
+          <div className="p-4">
+            <Skeleton className="mb-2 h-8 w-32 mx-auto" />
+            <Skeleton className="h-4 w-48 mx-auto" />
+          </div>
+          
+          <div className="flex-1 relative">
+            {[0, 1, 2].map((index) => (
+              <StoryCard
+                key={index}
+                index={index}
+                totalCards={3}
+                onSwipe={() => {}}
+                isTop={index === 0}
+                loading={true}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     )
   }

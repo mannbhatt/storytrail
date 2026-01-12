@@ -216,7 +216,7 @@ export default function AboutPage() {
     {/* CTA Button */}
     <div className="mt-16 text-center">
       <Link
-        href="/submit-story"
+        href="/write-story"
         className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-black bg-accent hover:bg-yellow-500 transition-colors shadow-sm hover:shadow-md"
       >
         Share Your Story

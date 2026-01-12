@@ -48,8 +48,8 @@ export default function ExplorePlaces() {
             <PlaceCard
               key={`${place.location_id}`}
               place={place}
-              isHovered={hoveredCard === place.id}
-              onHover={() => setHoveredCard(place.id)}
+              isHovered={hoveredCard === place.location_id}
+              onHover={() => setHoveredCard(place.location_id)}
               onLeave={() => setHoveredCard(null)}
             />
           ))}
@@ -61,8 +61,8 @@ export default function ExplorePlaces() {
             <PlaceCard
               key={`${place.location_id}`}
               place={place}
-              isHovered={hoveredCard === place.id}
-              onHover={() => setHoveredCard(place.id)}
+              isHovered={hoveredCard === place.location_id}
+              onHover={() => setHoveredCard(place.location_id)}
               onLeave={() => setHoveredCard(null)}
               isMobile
             />
@@ -109,6 +109,7 @@ function PlaceCard({
           alt={`${place.placeName}, ${place.stateName}`}
           fill
           className={`object-cover `}
+          unoptimized
         />
         {/* Subtle overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />

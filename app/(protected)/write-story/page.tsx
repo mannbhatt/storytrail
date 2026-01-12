@@ -126,7 +126,7 @@ export default function WriteStoryPage() {
         title: form.title,
         subtitle: form.subtitle,
         content: form.content,
-        coverImage: form.coverImageUrl || null,
+        coverImage: form.coverImageUrl || "https://cdn.pixabay.com/photo/2022/05/28/21/44/carpathians-7228042_960_720.jpg",
 
         categoryId: form.categoryId !== "OTHER" ? form.categoryId : null,
         categoryOther: form.categoryId === "OTHER" ? form.categoryOther : null,

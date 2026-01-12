@@ -181,7 +181,22 @@ export default function StoriesList({
           </select>
         </div>
 
-        {loading && <p className="text-center py-10">Loading stories...</p>}
+        {loading && (
+          <>
+            {/* Desktop Skeleton Grid */}
+            <div className="hidden lg:grid grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <StoryCard key={i} loading={true} />
+              ))}
+            </div>
+            {/* Mobile Skeleton Grid */}
+            <div className="space-y-4 lg:hidden">
+              {[1, 2, 3, 4].map((i) => (
+                <StoryCard key={i} loading={true} />
+              ))}
+            </div>
+          </>
+        )}
 
         {!loading && stories.length === 0 && (
           <div className="py-20 text-center">

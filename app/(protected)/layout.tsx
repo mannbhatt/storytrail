@@ -11,7 +11,7 @@ export default async function ProtectedLayout({
   const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
-    redirect('/?signin=true')
+    redirect('/signup')
     return null
   }
 

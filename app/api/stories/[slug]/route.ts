@@ -28,6 +28,7 @@ export async function GET(
         content,
         cover_image,
         created_at,
+       
 
         categories (
           id,
@@ -38,6 +39,11 @@ export async function GET(
           id,
           city,
           state
+        ),
+
+        users:user_id (
+          user_name,
+          avatar_url
         )
       `)
       .eq("slug", slug)

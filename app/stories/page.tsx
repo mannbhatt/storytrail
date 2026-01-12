@@ -1,17 +1,26 @@
 "use client";
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 import Link from "next/link"
 import { Pen, ArrowRight, BookOpen } from "lucide-react"
 import Hero from "@/components/stories/HeroStory"
 import StoriesList from "@/components/stories/StoriesList"
 
-export default function StoriesPage() {
- 
+function StoriesPageContent() {
+  const [search, setSearch] = useState('');
+  const searchParams = useSearchParams();
+  const locationParam = searchParams.get('location');
+  
+  const handleSearch = (value: string) => {
+    setSearch(value);
+  };
+
   return (
     <div className="min-h-screen bg-background">
-       <Hero/>
-        <StoriesList/>       
+       <Hero search={search} onSearch={handleSearch}/>
+        <StoriesList search={search} initialLocation={locationParam}/>       
      <section className="py-16 lg:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-primary to-primaryDark rounded-3xl shadow-xl p-8 lg:p-12 text-center text-white">
@@ -43,5 +52,20 @@ export default function StoriesPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function StoriesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading stories...</p>
+        </div>
+      </div>
+    }>
+      <StoriesPageContent />
+    </Suspense>
   );
 }

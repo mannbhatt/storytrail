@@ -80,7 +80,7 @@ export default function Imgupload({
                 fontSize: "0.875rem",
               },
             }}
-            onClientUploadComplete={(res) => {
+            onClientUploadComplete={(res: UploadThingResponse[]) => {
               const file = res?.[0] as UploadThingResponse | undefined;
               if (!file) return;
 

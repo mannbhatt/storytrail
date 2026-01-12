@@ -1,10 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-interface CookieMethods {
-  get: (name: string) => string | undefined
-  set: (name: string, value: string, options: CookieOptions) => void
-  remove: (name: string, options: CookieOptions) => void
-}
+
 export function supabaseServer() {
   const cookieStore = cookies(); // <- NOT async, returns ReadonlyRequestCookies
 
@@ -16,11 +12,11 @@ export function supabaseServer() {
         async get(name: string) {
           return (await cookieStore).get(name)?.value;
         },
-        async set(name: string, value: string, options: any) {
+        async set(name: string, value: string, options: Record<string, any> = {}) {
           (await cookieStore).set(name, value, options);
         },
-        async remove(name: string, options: any) {
-          (await cookieStore).delete(name, options);
+        async remove(name: string, options: Record<string, any> = {}) {
+          (await cookieStore).delete(name);
         },
       },
     }

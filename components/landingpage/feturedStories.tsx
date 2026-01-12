@@ -2,27 +2,7 @@
 import { useEffect, useState } from "react";
 import StoryCard from "./StoryCard";
 
-interface stories {
-  id: number;
-  title: string;
-  slug: string;
-  summary: string;
-  cover_image: string;
-  created_at: string;
-  categories: {
-    id: number;
-    name: string;
-  };
-  locations: {
-    id: number;
-    city: string;
-    state: string;
-  };
-  users: {
-    user_name: string;
-    avatar_url: string;
-  };
-}
+
 export default function FeaturedStories() {
   const [stories, setStories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,8 +35,26 @@ export default function FeaturedStories() {
   if (loading) {
     return (
       <section className="py-12 lg:py-16">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-gray-500">Loading featured stories…</p>
+        <div className="container mx-auto px-4">
+          {/* Section Header Skeleton */}
+          <div className="mb-8 text-center lg:mb-12">
+            <div className="h-8 w-48 bg-gray-200 rounded-md mx-auto mb-2 animate-pulse"></div>
+            <div className="h-4 w-64 bg-gray-200 rounded-md mx-auto animate-pulse"></div>
+          </div>
+          
+          {/* Desktop Skeleton Grid */}
+          <div className="hidden lg:grid lg:grid-cols-3 lg:gap-6">
+            {[1, 2, 3].map((i) => (
+              <StoryCard key={i} loading={true} />
+            ))}
+          </div>
+          
+          {/* Mobile Skeleton List */}
+          <div className="space-y-4 lg:hidden">
+            {[1, 2, 3].map((i) => (
+              <StoryCard key={i} loading={true} />
+            ))}
+          </div>
         </div>
       </section>
     );

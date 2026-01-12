@@ -1,101 +1,230 @@
+"use client"
+
 import type { Metadata } from "next"
 import Image from "next/image"
-import { notFound } from "next/navigation"
-import { MapPin, Calendar, ArrowLeft, Clock } from "lucide-react"
+import { MapPin, Calendar, ArrowLeft, Clock, Heart, MessageCircle, Eye, User } from "lucide-react"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
+interface StoryData {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  content: string;
+  cover_image: string;
+  created_at: string;
+  like_count: number;
+  comment_count: number;
+  view_count: number;
+  categories: {
+    id: number;
+    name: string;
+  } | null;
+  locations: {
+    id: number;
+    city: string;
+    state: string;
+  } | null;
+  users: {
+    user_name: string;
+    avatar_url: string | null;
+  } | null;
+}
 
+export default function StoryDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const [slug, setSlug] = useState<string>("");
+  const [story, setStory] = useState<StoryData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [liking, setLiking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const loadSlug = async () => {
+      const resolvedParams = await params;
+      setSlug(resolvedParams.slug);
+    };
+    loadSlug();
+  }, [params]);
 
-export default async function StoryDetailPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  useEffect(() => {
+    if (!slug) return;
+
+    const loadStory = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:3000/api/stories/${slug}`);
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch story');
+        }
+        
+        const data = await res.json();
+        setStory(data);
+      } catch (err) {
+        console.error('Error loading story:', err);
+        setError('Failed to load story');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStory();
+  }, [slug]);
+
   
-  const res = await fetch(`http://localhost:3000/api/stories/${slug}`);
-  const data = await res.json();
-  
-  if (!data) notFound();
 
-    console.log("story data",data)
-  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading story...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !story) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error || 'Story not found'}</p>
+          <Link
+            href="/stories"
+            className="inline-flex items-center gap-2 text-primary hover:underline"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Stories
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <article className="min-h-screen bg-white font-sans text-slate-900 selection:bg-primary-brand/10">
-      {/* 1. Header Section - Minimal and Typography-focused */}
+    <div className="min-h-screen bg-background">
       <div className="w-full h-[72px] bg-primary"></div>
-      <header className="max-w-3xl mx-auto px-6 pt-16 md:pt-24 pb-12">
-        <div className="space-y-6">
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 bg-primary-brand/10 text-primary-brand rounded-full text-[10px] font-heading font-black uppercase tracking-wider">
-              {data.categories.name}
-            </span>
-            <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-heading font-bold uppercase tracking-wider">
-              <MapPin className="w-3 h-3" />
-              {data.locations.city}, {data.locations.state}
+      {/* Breadcrumb Navigation */}
+      <div className="bg-background pt-10 ">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <Link
+            href="/stories"
+            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Stories
+          </Link>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="grid gap-8">
+          {/* Main Content */}
+          <div className="">
+            {/* Cover Image */}
+            {story.cover_image && (
+              <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
+                <div className="relative aspect-[16/9] w-full">
+                  <Image
+                    src={story.cover_image}
+                    alt={story.title}
+                    fill
+                    className="object-cover"
+                    priority
+                    unoptimized
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Story Header */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                {story.categories?.name && (
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold uppercase tracking-wide">
+                    {story.categories?.name}
+                  </span>
+                )}
+                {story.locations && (
+                  <div className="flex items-center gap-1.5 text-gray-500 text-sm">
+                    <MapPin className="w-4 h-4" />
+                    {story.locations?.city}, {story.locations?.state}
+                  </div>
+                )}
+              </div>
+
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                {story.title}
+              </h1>
+
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                {story.summary}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Calendar className="w-4 h-4" />
+                  {new Date(story.created_at).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Clock className="w-4 h-4" />
+                  4 min read
+                </div>
+                
+              </div>
+            </div>
+
+            {/* Story Content */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <div className="prose prose-lg max-w-none">
+                <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                  {story.content}
+                </div>
+              </div>
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-heading font-extrabold leading-[1.1] tracking-tight text-slate-900">
-            {data.title}
-          </h1>
+          {/* Sidebar */}
+          <div className="">
+            {/* Author Card */}
+            {story.users && (
+              <div className="bg-white w-full rounded-2xl p-6 shadow-sm mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">About the Author</h3>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden bg-gray-200">
+                    {story.users.avatar_url ? (
+                      <Image
+                        src={story.users.avatar_url}
+                        alt={story.users.user_name || "Author"}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                        <User className="w-8 h-8 text-gray-500" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">
+                      {story.users.user_name || "Anonymous"}
+                    </h4>
+                    <p className="text-sm text-gray-500">Story Teller</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          <p className="text-xl md:text-2xl text-slate-500 font-sans leading-relaxed italic">{data.summary}</p>
-
-          <div className="flex items-center gap-6 pt-4 text-slate-400 text-xs font-sans border-t border-slate-100">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              {new Date(data.created_at).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />4 min read
-            </div>
+           
+            
           </div>
         </div>
-      </header>
-
-      {/* 2. Optional Cover Image - Constrained and Rounded */}
-      {data.cover_image && (
-        <div className="max-w-4xl mx-auto px-6 mb-16">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl shadow-sm border border-slate-100">
-            <Image
-              src={data.cover_image || "/placeholder.svg"}
-              alt={data.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </div>
-      )}
-
-      {/* 4. Story Content - High Readability */}
-      <main className="max-w-3xl mx-auto px-6 pb-24">
-        <div className="prose prose-slate prose-lg md:prose-xl max-w-none">
-          <div className="font-sans text-lg md:text-xl leading-[1.85] text-slate-700 whitespace-pre-wrap">
-            {data.content}
-          </div>
-        </div>
-
-        {/* 5. Footer Section */}
-        <footer className="mt-20 pt-10 border-t border-slate-100">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/stories"
-              className="group flex items-center gap-2 text-xs font-heading font-black text-slate-400 uppercase tracking-widest hover:text-primary-brand transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Back to all stories
-            </Link>
-
-            <div className="flex items-center gap-2 text-[10px] font-heading font-bold text-slate-300 uppercase tracking-widest">
-              StoryTrail Editorial
-            </div>
-          </div>
-        </footer>
-      </main>
-    </article>
-  )
+      </div>
+    </div>
+  );
 }

@@ -19,11 +19,11 @@ interface Story {
     id: number
     city: string
     state: string
-  } | null
+  }[] | null
   users: {
     user_name: string | null
     avatar_url: string | null
-  } | null
+  }[] | null
 }
 
 export default async function ProfilePage() {
@@ -53,7 +53,7 @@ export default async function ProfilePage() {
           id,
           city,
           state
-        ),
+        ), 
         users:user_id (
           user_name,
           avatar_url
@@ -67,19 +67,24 @@ export default async function ProfilePage() {
     }
 
     // Transform the data
- // In page.tsx
-const formattedStories = (stories || []).map((story) => ({
-  id: story.id,
-  slug: story.slug,
-  title: story.title,
-  subtitle: story.summary,
-  city: story.locations?.[0]?.city || 'Unknown',
-  image: story.cover_image || '/placeholder.svg',
-  user: {
-    name: story.users?.[0]?.user_name || 'Anonymous',
-    avatar: story.users?.[0]?.avatar_url || null
-  }
-}));
+    const formattedStories = (stories || []).map((story) => ({
+      id: story.id,
+      slug: story.slug,
+      title: story.title,
+      subtitle: story.summary,
+      city: story.locations && story.locations.length > 0 
+        ? `${story.locations[0]?.city}, ${story.locations[0]?.state}` 
+        : 'Unknown location',
+      image: story.cover_image || '/placeholder.svg',
+      user: {
+        name: story.users && story.users.length > 0 
+          ? story.users[0]?.user_name || 'Anonymous'
+          : 'Anonymous',
+        avatar: story.users && story.users.length > 0 
+          ? story.users[0]?.avatar_url || null
+          : null
+      }
+    }));
     return <UserProfile user={session.user} stories={formattedStories} />
 
   } catch (error) {

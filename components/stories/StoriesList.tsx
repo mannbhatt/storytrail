@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import StoryCard from "../landingpage/StoryCard";
+import { useMixpanel } from "@/hooks/useMixpanel";
 interface Category {
   id: string;
   name: string;
@@ -48,6 +49,7 @@ export default function StoriesList({
   const [stories, setStories] = useState<any[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
+  const { trackSearch, track } = useMixpanel();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedCity, setSelectedCity] = useState<string>("All");
@@ -69,12 +71,6 @@ export default function StoriesList({
       setSelectedCity(initialLocation);
     }
   }, [initialLocation]);
-  console.log(
-    "Initial location:",
-    initialLocation,
-    "Selected city:",
-    selectedCity
-  );
   useEffect(() => {
     const controller = new AbortController();
 
@@ -106,6 +102,19 @@ export default function StoriesList({
 
         const data = await res.json();
         setStories(data.stories ?? []);
+        
+        // Track search and filter events
+        if (search?.trim()) {
+          trackSearch(search.trim(), data.stories?.length || 0);
+        }
+        
+        if ((selectedCategory !== "All" || selectedCity !== "All") && !search?.trim()) {
+          track('Filters Applied', {
+            category: selectedCategory !== "All" ? selectedCategory : undefined,
+            city: selectedCity !== "All" ? selectedCity : undefined,
+            results_count: data.stories?.length || 0,
+          });
+        }
       } catch (err: any) {
         if (err.name !== "AbortError") {
           console.error("Failed to fetch stories:", err);

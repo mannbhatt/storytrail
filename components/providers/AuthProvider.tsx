@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { supabaseBrowser } from "@/lib/supabase/client"
 import type { Session } from "@supabase/supabase-js"
+import { identifyUser, resetUser } from "@/lib/mixpanel"
 
 type AuthContextType = {
   session: Session | null
@@ -29,6 +30,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session)
+        
+        // Track user authentication events in Mixpanel
+        if (session?.user) {
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          })
+        } else {
+          resetUser()
+        }
       }
     )
 

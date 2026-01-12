@@ -14,9 +14,11 @@ interface Place {
 export default function ExplorePlaces() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [places, setPlaces] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlaces = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/places`);
         const data = await res.json();
@@ -24,6 +26,8 @@ export default function ExplorePlaces() {
         console.log("ExplorePlaces places:", data.places);
       } catch (err) {
         console.error("Failed to fetch places", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPlaces();
@@ -44,32 +48,81 @@ export default function ExplorePlaces() {
 
         {/* Desktop Grid - Hidden on Mobile */}
         <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {places.map((place) => (
-            <PlaceCard
-              key={`${place.location_id}`}
-              place={place}
-              isHovered={hoveredCard === place.location_id}
-              onHover={() => setHoveredCard(place.location_id)}
-              onLeave={() => setHoveredCard(null)}
-            />
-          ))}
+          {loading
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <PlaceCardSkeleton key={index} />
+              ))
+            : places.map((place) => (
+                <PlaceCard
+                  key={`${place.location_id}`}
+                  place={place}
+                  isHovered={hoveredCard === place.location_id}
+                  onHover={() => setHoveredCard(place.location_id)}
+                  onLeave={() => setHoveredCard(null)}
+                />
+              ))}
         </div>
 
         {/* Mobile - 2 Column Grid */}
         <div className="grid grid-cols-2 gap-4 md:hidden">
-          {places.map((place) => (
-            <PlaceCard
-              key={`${place.location_id}`}
-              place={place}
-              isHovered={hoveredCard === place.location_id}
-              onHover={() => setHoveredCard(place.location_id)}
-              onLeave={() => setHoveredCard(null)}
-              isMobile
-            />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <PlaceCardSkeleton key={index} isMobile />
+              ))
+            : places.map((place) => (
+                <PlaceCard
+                  key={`${place.location_id}`}
+                  place={place}
+                  isHovered={hoveredCard === place.location_id}
+                  onHover={() => setHoveredCard(place.location_id)}
+                  onLeave={() => setHoveredCard(null)}
+                  isMobile
+                />
+              ))}
         </div>
       </div>
     </section>
+  );
+}
+
+interface PlaceCardSkeletonProps {
+  isMobile?: boolean;
+}
+
+function PlaceCardSkeleton({ isMobile = false }: PlaceCardSkeletonProps) {
+  return (
+    <div className="bg-white rounded-xl overflow-hidden shadow-md">
+      {/* Image Skeleton */}
+      <div className="relative aspect-video overflow-hidden bg-slate-200">
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 animate-pulse" />
+      </div>
+
+      {/* Content Skeleton */}
+      <div className={`p-4 ${isMobile ? "p-3" : "p-4"}`}>
+        {/* Title Skeleton */}
+        <div
+          className={`h-6 bg-slate-200 rounded mb-2 animate-pulse ${
+            isMobile ? "h-5" : "h-6"
+          }`}
+        />
+
+        {/* State Skeleton */}
+        <div
+          className={`h-4 bg-slate-200 rounded mb-3 w-3/4 animate-pulse ${
+            isMobile ? "h-3" : "h-4"
+          }`}
+        />
+
+        {/* Story Count Badge Skeleton */}
+        <div className="flex items-center">
+          <div
+            className={`h-6 bg-slate-200 rounded-full animate-pulse ${
+              isMobile ? "h-5 w-16" : "h-6 w-20"
+            }`}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 

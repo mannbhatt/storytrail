@@ -3,6 +3,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/providers/AuthProvider"
+import MixpanelProvider from "@/components/providers/MixpanelProvider"
 import Header from "@/components/header";
 import MobileBottomNav from "@/components/bottom-nav";
 import Footer from "@/components/footer";
@@ -25,10 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-background text-textDark font-sans">
         {/* You will add header here later */}
   <AuthProvider>      
-<Header/>
+    <MixpanelProvider>
+      <Header/>
         <main className=" ">{children}</main>
         <Footer/>
         <MobileBottomNav />
+        </MixpanelProvider>
         </AuthProvider>
         {/* You will add footer here later */}
       </body>

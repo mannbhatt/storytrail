@@ -33,7 +33,7 @@ export default function Imgupload({
   const handleRemove = async () => {
     if (!imageKey) return;
 
-    const res = await fetch("/api/uploadthing/imgRemove", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/uploadthing/imgRemove`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ imageKey }),

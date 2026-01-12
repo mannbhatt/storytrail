@@ -26,8 +26,8 @@ export default function Footer() {
       setLoading(true);
       
       const [categoriesRes, locationsRes] = await Promise.all([
-        fetch('/api/categories'),
-        fetch('/api/locations')
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/locations`)
       ]);
       if (!categoriesRes.ok || !locationsRes.ok) {
         throw new Error('Failed to fetch data');

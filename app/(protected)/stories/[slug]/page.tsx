@@ -36,7 +36,7 @@ export default function StoryDetailPage({ params }: { params: Promise<{ slug: st
   const [slug, setSlug] = useState<string>("");
   const [story, setStory] = useState<StoryData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [liking, setLiking] = useState(false);
+  
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function StoryDetailPage({ params }: { params: Promise<{ slug: st
     const loadStory = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:3000/api/stories/${slug}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stories/${slug}`);
         
         if (!res.ok) {
           throw new Error('Failed to fetch story');

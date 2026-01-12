@@ -45,13 +45,13 @@ export default function WriteStoryPage() {
   const router=useRouter();
   useEffect(() => {
 
-    fetch("/api/categories")
+    fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data.categories || []))
       .catch((err) => console.error(err));
 
 
-    fetch("/api/locations")
+    fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/locations`)
       .then((res) => res.json())
       .then((data) => setLocations(data.locations || []))
       .catch((err) => console.error(err));
@@ -138,7 +138,7 @@ export default function WriteStoryPage() {
         status: action, // publish | draft
       }
 
-      const res = await fetch("/api/stories/create", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stories/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

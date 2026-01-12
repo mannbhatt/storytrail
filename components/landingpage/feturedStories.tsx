@@ -12,7 +12,7 @@ export default function FeaturedStories() {
 
     const fetchFeaturedStories = async () => {
       try {
-        const res = await fetch("/api/stories?limit=6", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stories?limit=6`, {
           signal: controller.signal,
         });
         const data = await res.json();

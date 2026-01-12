@@ -222,7 +222,7 @@ export default function StoriesSwiper() {
     const fetchStories = async () => {
       try {
         setLoading(true)
-        const response = await fetch('/api/stories')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stories`)
         if (!response.ok) {
           throw new Error('Failed to fetch stories')
         }
@@ -248,7 +248,7 @@ export default function StoriesSwiper() {
       // For example, you might want to send an API call to update story's like count
       if (direction === "right") {
         // Like action
-        await fetch(`/api/stories/${storyId}/like`, { method: 'POST' })
+        await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stories/${storyId}/like`, { method: 'POST' })
       }
     } catch (err) {
       console.error('Error handling swipe:', err)

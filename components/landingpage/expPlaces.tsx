@@ -18,7 +18,7 @@ export default function ExplorePlaces() {
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const res = await fetch("/api/places");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/places`);
         const data = await res.json();
         setPlaces(data.places || []);
         console.log("ExplorePlaces places:", data.places);

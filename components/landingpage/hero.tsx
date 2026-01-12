@@ -30,7 +30,7 @@ export default function Hero() {
 
           {/* Search Bar - Desktop Only */}
           <div className="hidden lg:block w-full max-w-[700px]">
-  <div className="relative">
+  <form onSubmit={handleSearch} className="relative">
     <div className="flex items-center bg-white border rounded-md shadow-lg h-[48px] px-5">
       {/* Search Input */}
       <input
@@ -50,14 +50,14 @@ export default function Hero() {
 
       {/* Search Button */}
       <button
-     onClick={handleSearch}
+        type="submit"
         className=""
         aria-label="Search"
       >
         <Search className="w-5 h-5 text-gray-800 font-bold" />
       </button>
     </div>
-  </div>
+  </form>
 </div>
 
 

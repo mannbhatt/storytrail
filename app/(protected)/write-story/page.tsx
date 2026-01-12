@@ -170,24 +170,24 @@ export default function WriteStoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-32 font-sans text-text-main">
+    <div className="min-h-screen bg-background pb-32 font-sans text-textDark">
       <div className="w-full h-[72px] bg-primary"></div>
-      <div className="mx-auto max-w-5xl px-4 mt-12">
+      <div className="container-max mt-12">
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 md:p-12 shadow-sm">
-          <div className="flex flex-col items-center justify-center  px-4 pb-12">
-            <h1 className="text-black font-heading text-3xl lg:text-4xl font-semibold text-center mb-4 drop-shadow-md">
-              Write Your <span className="text-accent-brand">Story</span>
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 lg:p-12 shadow-smSoft">
+          <div className="flex flex-col items-center justify-center px-4 pb-8 sm:pb-12">
+            <h1 className="text-textDark font-heading text-2xl sm:text-3xl lg:text-4xl font-semibold text-center mb-4">
+              Write Your <span className="text-accent">Story</span>
             </h1>
-            <p className="text-gray-700 font-sans text-base lg:text-lg text-center max-w-2xl drop-shadow-sm font-medium">
+            <p className="text-gray-600 font-sans text-sm sm:text-base lg:text-lg text-center max-w-2xl font-medium">
               Share your unique travel experiences, local insights, and emotions with our global community.
             </p></div>
 
-          <div className="grid md:grid-cols-2 gap-12 mb-12">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 mb-12">
 
             <div className="space-y-6 order-2 md:order-1">
               <div className="space-y-3">
-                <label className="text-xs pl-1 md:text-lg font-heading font-semibold text-slate-700 tracking-[0.2em] flex items-center gap-2">
+                <label className="text-xs sm:text-sm lg:text-base pl-1 font-heading font-semibold text-gray-700 tracking-[0.1em] flex items-center gap-2">
                   Story Title
                 </label>
                 <input
@@ -195,20 +195,20 @@ export default function WriteStoryPage() {
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="A night that changed everything..."
-                  className="w-full px-2 py-4 border-2 border-slate-100 font-heading text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-slate-300"
+                  className="w-full px-3 py-3 sm:py-4 border-2 border-gray-100 font-heading text-lg sm:text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-gray-400"
                   required
                 />
               </div>
 
               <div className="space-y-3">
-                <label className="text-xs pl-1 md:text-lg font-heading font-semibold text-slate-700 tracking-[0.2em] flex items-center gap-2">
+                <label className="text-xs sm:text-sm lg:text-base pl-1 font-heading font-semibold text-gray-700 tracking-[0.1em] flex items-center gap-2">
                   Subtitle
                 </label>
                 <textarea
                   value={form.subtitle}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                   placeholder="A brief teaser to hook your readers..."
-                  className="w-full px-2 py-2 border-2 border-slate-100 font-sans text-xl leading-relaxed rounded-lg focus:outline-none focus:border-primary transition-all bg-transparent resize-none h-24 placeholder:text-slate-300"
+                  className="w-full px-3 py-2 sm:py-3 border-2 border-gray-100 font-sans text-lg sm:text-xl leading-relaxed rounded-lg focus:outline-none focus:border-primary transition-all bg-transparent resize-none h-20 sm:h-24 placeholder:text-gray-400"
                   required
                 />
               </div>
@@ -216,10 +216,10 @@ export default function WriteStoryPage() {
 
 
             <div className="order-1 md:order-2">
-              <label className=" mb-2 pl-1 block text-xs md:text-lg font-heading font-semibold text-slate-700 tracking-[0.2em] flex items-center ">
+              <label className="mb-2 pl-1 block text-xs sm:text-sm lg:text-base font-heading font-semibold text-gray-700 tracking-[0.1em] flex items-center">
                 Visual Cover
               </label>
-              <div className="overflow-hidden rounded-lg ring-1 ring-slate-100">
+              <div className="overflow-hidden rounded-lg ring-1 ring-gray-100">
                 <ImgUpload
                   onUploadComplete={handleImageUpload}
                   onImageKeyChange={handleImageKeyChange}
@@ -227,33 +227,33 @@ export default function WriteStoryPage() {
                   initialImageKey={form.coverImageKey}
                 />
               </div>
-              <p className="text-xs text-slate-400 mt-3 font-sans italic">
+              <p className="text-xs text-gray-500 mt-3 font-sans italic">
                 Pro tip: High-quality landscape images work best for story covers.
               </p>
             </div>
           </div>
 
 
-          <div className="grid md:grid-cols-2 gap-12 mb-12 py-12 border-y-2 border-slate-100">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 mb-12 py-8 lg:py-12 border-y-2 border-gray-100">
             <div className="space-y-6">
-              <label className=" mb-2 pl-1 block text-xs md:text-lg font-heading font-semibold text-slate-700 tracking-[0.2em] flex items-center ">
+              <label className="mb-2 pl-1 block text-xs sm:text-sm lg:text-base font-heading font-semibold text-gray-700 tracking-[0.1em] flex items-center">
                 Choose Category
               </label>
 
               <div className="relative group ">
-                <select className="w-full pl-4 pr-6 py-4 border-2 border-slate-100 font-sans text-xl rounded-lg focus:outline-none focus:border-primary transition-all bg-transparent appearance-none cursor-pointer" value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
+                <select className="w-full pl-4 pr-6 py-3 sm:py-4 border-2 border-gray-100 font-sans text-base sm:text-lg lg:text-xl rounded-lg focus:outline-none focus:border-primary transition-all bg-transparent appearance-none cursor-pointer" value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
                   <option value="">Select category…</option>
                   {categories.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                   <option value="OTHER">Other</option>
                 </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-primary transition-colors" />
               </div>
               {
                 form.categoryId === "OTHER" && (
                   <input
-                    className="w-full px-2 mt-4 py-4 border-2 border-slate-100 font-heading text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-slate-300"
+                    className="w-full px-3 mt-4 py-3 sm:py-4 border-2 border-gray-100 font-heading text-base sm:text-lg lg:text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-gray-400"
                     placeholder="Enter new category"
                     value={form.categoryOther}
                     onChange={(e) =>
@@ -264,24 +264,24 @@ export default function WriteStoryPage() {
 
             </div>
             <div className="space-y-6">
-              <label className="mb-2 block pl-1 text-xs md:text-lg font-heading font-semibold text-slate-700 tracking-[0.2em] flex items-center">
+              <label className="mb-2 block pl-1 text-xs sm:text-sm lg:text-base font-heading font-semibold text-gray-700 tracking-[0.1em] flex items-center">
                 Vibe / Location
               </label>
 
               <div className="relative group ">
-                <select className="w-full pl-4 pr-6 py-4 border-2 border-slate-100 font-sans text-xl rounded-lg focus:outline-none focus:border-primary transition-all bg-transparent appearance-none cursor-pointer" value={form.locationId} onChange={(e) => setForm({ ...form, locationId: e.target.value })}>
+                <select className="w-full pl-4 pr-6 py-3 sm:py-4 border-2 border-gray-100 font-sans text-base sm:text-lg lg:text-xl rounded-lg focus:outline-none focus:border-primary transition-all bg-transparent appearance-none cursor-pointer" value={form.locationId} onChange={(e) => setForm({ ...form, locationId: e.target.value })}>
                   <option value="">Select city…</option>
                   {locations.map(loc => (
                     <option key={loc.id} value={loc.id}>{loc.city}, {loc.state}</option>
                   ))}
                   <option value="OTHER">Other</option>
                 </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-primary transition-colors" />
               </div>
               {form.locationId === "OTHER" && (
                 <div className="flex gap-2">
                   <input
-                    className="w-[50%] px-2 mt-4 py-4 border-2 border-slate-100 font-heading text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-slate-300"
+                    className="w-[48%] px-3 mt-4 py-3 sm:py-4 border-2 border-gray-100 font-heading text-base sm:text-lg lg:text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-gray-400"
                     placeholder="City / Village"
                     value={form.cityOther}
                     onChange={(e) =>
@@ -289,7 +289,7 @@ export default function WriteStoryPage() {
                     }
                   />
                   <input
-                    className="w-[50%] px-2 mt-4 py-4 border-2 border-slate-100 font-heading text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-slate-300"
+                    className="w-[48%] px-3 mt-4 py-3 sm:py-4 border-2 border-gray-100 font-heading text-base sm:text-lg lg:text-xl rounded-lg font-semibold focus:outline-none focus:border-primary transition-all bg-transparent placeholder:text-gray-400"
                     placeholder="State"
                     value={form.stateOther}
                     onChange={(e) =>
@@ -303,7 +303,7 @@ export default function WriteStoryPage() {
           </div>
 
           <div className="mb-12">
-            <label className="mb-2 block pl-1 text-xs md:text-lg font-heading font-semibold text-slate-700 tracking-[0.2em] flex items-center">
+            <label className="mb-2 block pl-1 text-xs sm:text-sm lg:text-base font-heading font-semibold text-gray-700 tracking-[0.1em] flex items-center">
               Narrative Flow
             </label>
             <div className="relative">
@@ -311,26 +311,26 @@ export default function WriteStoryPage() {
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
                 placeholder="Begin your journey here..."
-                className="w-full px-8 py-10 bg-slate-50 border border-slate-100 rounded-lg font-sans text-xl leading-[1.6] min-h-[600px] resize-none focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary transition-all text-slate-800 placeholder:text-slate-400"
+                className="w-full px-4 sm:px-6 py-6 sm:py-8 lg:py-10 bg-gray-50 border border-gray-100 rounded-lg font-sans text-base sm:text-lg lg:text-xl leading-[1.6] min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] resize-none focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary transition-all text-textDark placeholder:text-gray-400"
                 required
               />
-              <div className="absolute bottom-4 right-6 text-[10px] text-slate-400 font-sans uppercase tracking-tighter">
+              <div className="absolute bottom-4 right-4 sm:right-6 text-[10px] text-gray-400 font-sans uppercase tracking-tighter">
                 {form.content.split(/\s+/).filter(Boolean).length} Words
               </div>
             </div>
-            <p className="text-sm text-slate-400 mt-4 flex items-center gap-2 italic">
-              <AlertCircle className="w-4 h-4" /> Focus on the emotions and sensory details to bring your story to life.
+            <p className="text-xs sm:text-sm text-gray-500 mt-4 flex items-center gap-2 italic">
+              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Focus on the emotions and sensory details to bring your story to life.
             </p>
           </div>
 
 
-          <div className="flex flex-col md:flex-row items-center justify-end gap-8 pt-12 border-t border-slate-100">
+          <div className="flex flex-col sm:flex-row items-center justify-end gap-4 sm:gap-6 lg:gap-8 pt-8 lg:pt-12 border-t border-gray-100">
             
             <div className="flex items-center gap-5 w-full md:w-auto">
               <button
                 type="button"
                 onClick={() => setShowPreview(true)}
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-4 border-2  text-black font-heading font-semibold rounded-lg bg-accent hover:bg-yellpw-400 hover:shadow-xl border-accent  text-sm  tracking-[0.2em]"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 border-2 text-textDark font-heading font-semibold rounded-lg bg-accent hover:bg-yellow-400 hover:shadow-xl border-accent text-xs sm:text-sm tracking-[0.1em] transition-all"
               >
                 <Eye className="w-4 h-4" /> Preview
               </button>
@@ -339,7 +339,7 @@ export default function WriteStoryPage() {
                 type="button"
                 onClick={() => handleSubmit("publish")}
                 disabled={isSubmitting}
-                className="flex-[2] md:flex-none px-16 py-5 bg-primary text-white font-heading font-semibold rounded-lg hover:bg-primaryDark hover:shadow-xl hover:shadow-primary-brand/25 transition-all text-sm  tracking-[0.2em] disabled:opacity-70 flex items-center justify-center gap-3"
+                className="flex-[2] sm:flex-none px-8 sm:px-12 lg:px-16 py-4 sm:py-5 bg-primary text-white font-heading font-semibold rounded-lg hover:bg-primaryDark hover:shadow-xl hover:shadow-primary/25 transition-all text-xs sm:text-sm tracking-[0.1em] disabled:opacity-70 flex items-center justify-center gap-3"
               >
                 {isSubmitting ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-lg animate-spin" />
@@ -355,7 +355,7 @@ export default function WriteStoryPage() {
       
       <button
         onClick={() => handleSubmit("draft")}
-        className="fixed bottom-24 right-6 w-14 h-14 bg-accent-brand text-text-main rounded-lg shadow-lg flex items-center justify-center md:hidden hover:scale-110 transition-transform active:scale-95"
+        className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-accent text-textDark rounded-lg shadow-lg flex items-center justify-center lg:hidden hover:scale-110 transition-transform active:scale-95"
         title="Save Draft"
       >
         <CheckCircle className="w-6 h-6" />
@@ -365,7 +365,7 @@ export default function WriteStoryPage() {
       {notification && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4">
           <div
-            className={`px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 ${notification.type === "success" ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
+            className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-2xl flex items-center gap-3 ${notification.type === "success" ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
               }`}
           >
             {notification.type === "success" ? (

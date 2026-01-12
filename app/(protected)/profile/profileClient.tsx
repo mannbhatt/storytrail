@@ -112,21 +112,21 @@ console.log("stories", stories)
 
       {/* ============== USER STORIES ============== */}
       <main className="max-w-7xl mx-auto px-4 py-10 sm:py-12 md:py-16">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+        <div className="flex flex-row  justify-between gap-4 mb-8">
           <h2 className="font-heading text-2xl md:text-3xl font-semibold text-black tracking-tight">
-           Stories
+           Your Stories
           </h2>
           <button
             onClick={handleLogout}
             disabled={signingOut}
-            className="inline-block px-6 py-2 rounded-xl bg-accent text-black font-semibold shadow hover:bg-accent hover:text-textDark transition-colors disabled:opacity-60 disabled:cursor-not-allowed text-md"
+            className="inline-block px-6 py-2 rounded-lg bg-accent text-black font-semibold shadow hover:bg-accent hover:text-textDark transition-colors disabled:opacity-60 disabled:cursor-not-allowed text-md"
           >
             {signingOut ? "Logging out..." : "Log out"}
           </button>
         </div>
 
         {stories.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-background rounded-2xl shadow-inner">
+          <div className="flex flex-col items-center justify-center py-24 bg-background rounded-lg shadow-inner">
             <Image
               src="/empty-state.svg"
               alt="No stories yet"

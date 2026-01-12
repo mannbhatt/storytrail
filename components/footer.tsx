@@ -188,8 +188,14 @@ export default function Footer() {
           </div>
 
           {/* Categories Section */}
-          <div>
-              <h4 className="text-base font-semibold font-heading mb-4">Categories</h4>
+          <div className="border-b border-gray-700 md:border-none pb-4 md:pb-0">
+            <button
+              onClick={() => toggleSection("categories")}
+              className="flex items-center justify-between w-full md:cursor-default"
+            ><h4 className="text-base font-semibold font-heading mb-4">Categories</h4> <ChevronDown
+                className={`w-5 h-5 md:hidden transition-transform ${openSections["categories"] ? "rotate-180" : ""}`}
+              /></button>
+               <nav className={`${openSections["categories"] ? "block" : "hidden"} md:block mt-3 md:mt-0`}>
               <ul className="space-y-2">
                 {categories.slice(0, 5).map((category) => (
                   <li key={category.id}>
@@ -202,6 +208,7 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
+              </nav>
             </div>
 
           {/* Places Section */}

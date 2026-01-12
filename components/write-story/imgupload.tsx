@@ -48,12 +48,12 @@ export default function Imgupload({
       onImageKeyChange?.("");
     }
   };
-	console.log(imageUrl)
+	
   return (
-    <div className="w-full rounded-xl border border-border bg-background p-4 shadow-sm transition">
+    <div className="w-full rounded-xl border border-gray-100 bg-background p-4 shadow-smSoft transition">
       {/* Upload state */}
       {!imageUrl && (
-        <div className="flex h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted hover:border-primary transition">
+        <div className="flex h-40 sm:h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-primary transition">
           <UploadDropzone
             endpoint="imageUploader"
             appearance={{
@@ -64,20 +64,26 @@ export default function Imgupload({
                 height: "100%",
                 padding: "0",
               },
-              uploadIcon: { color: "var(--primary)" },
+              uploadIcon: { color: "var(--color-primary)" },
               label: {
-                color: "var(--foreground)",
-                fontSize: "0.9rem",
+                color: "var(--color-text)",
+                fontSize: "0.875rem",
+                fontFamily: "Inter, sans-serif",
               },
               allowedContent: {
-                color: "var(--muted-foreground)",
+                color: "#6B7280",
+                fontFamily: "Inter, sans-serif",
               },
               button: {
-                background: "var(--primary)",
-                color: "black",
-		borderColor:"black",
+                background: "var(--color-primary)",
+                color: "white",
+                borderColor: "var(--color-primary)",
                 borderRadius: "0.5rem",
                 fontSize: "0.875rem",
+                fontFamily: "Poppins, sans-serif",
+                fontWeight: "600",
+                width:"200px",
+                marginBottom:"12px",
               },
             }}
             onClientUploadComplete={(res: UploadThingResponse[]) => {
@@ -101,15 +107,15 @@ export default function Imgupload({
 	{/* Preview state */}
 {imageUrl && (
   <div className="flex flex-col items-center gap-3">
-    <div className="relative h-40 w-full  overflow-hidden rounded-lg border group">
+    <div className="relative h-32 sm:h-40 w-full overflow-hidden rounded-lg border border-gray-100 group">
       
       {/* Image */}
       <Image
         src={imageUrl}
         alt="Uploaded image"
         fill
-        sizes="160px"
-        className="object-cover "
+        sizes="(max-width: 640px) 128px, 160px"
+        className="object-cover"
       />
 
       {/* ❌ Remove button (top-right X) */}
@@ -119,7 +125,7 @@ export default function Imgupload({
         className="
           absolute right-2 top-2
           z-10
-          flex h-7 w-7 items-center justify-center
+          flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center
           rounded-full
           bg-black/70 text-white
           hover:bg-red-600

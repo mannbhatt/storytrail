@@ -43,7 +43,7 @@ export default function CommunityEngagement() {
     <section className="py-12 lg:py-16 " >
       <div className="container mx-auto  px-4 lg:px-8 max-w-[82rem]">
         {/* Section 1: Share Your Local Story */}
-        <div id="community" className="mb-24 lg:mb-32 bg-primary rounded-3xl shadow-lg overflow-hidden">
+        <div id="community" className="mb-24 lg:mb-32 bg-primary rounded-lg shadow-lg overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center p-8 lg:p-12">
             {/* Left: Text + Buttons */}
             <div className="text-center lg:text-left space-y-6">
@@ -55,10 +55,10 @@ export default function CommunityEngagement() {
                 <p className="text-pretty">No writing experience needed — just tell it like you would to a friend.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                <Link href="/write-story" className="flex items-center gap-2 bg-primaryDark hover:bg-primaryDark text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Link href="/write-story" className="flex items-center gap-2 bg-primaryDark hover:bg-primaryDark text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <Share className="w-4 h-4 font-seminbold text-white" />Share a Story
                 </Link>
-                <Link href="/about#howitworks" className="bg-accent hover:bg-yellow-400 text-textDark border-2 border-accent font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105">
+                <Link href="/about#howitworks" className="bg-accent hover:bg-yellow-400 text-textDark border-2 border-accent font-semibold px-8 py-4 rounded-lg transition-all duration-300 hover:scale-105">
                   Learn How It Works
                 </Link>
               </div>
@@ -67,8 +67,8 @@ export default function CommunityEngagement() {
             {/* Right: Illustration */}
             <div className="relative h-64  lg:h-80">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-full h-full rounded-3xl max-w-md">
-                  <Image src="/shareYourStory.jpg" alt="Share your story" fill className="object-contain rounded-3xl" />
+                <div className="relative w-full h-full rounded-lg max-w-md">
+                  <Image src="/shareYourStory.jpg" alt="Share your story" fill className="object-contain rounded-lg" />
                 </div>
               </div>
             </div>
@@ -84,28 +84,28 @@ export default function CommunityEngagement() {
 
           {/* Icon Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div className="flex flex-col items-center space-y-3 p-6 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <BookOpen className="w-8 h-8 text-primary" />
               </div>
               <span className="font-semibold text-textDark">Culture</span>
             </div>
 
-            <div className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div className="flex flex-col items-center space-y-3 p-6 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <Heart className="w-8 h-8 text-primary" />
               </div>
               <span className="font-semibold text-textDark">Heritage</span>
             </div>
 
-            <div className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div className="flex flex-col items-center space-y-3 p-6 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <Users className="w-8 h-8 text-primary" />
               </div>
               <span className="font-semibold text-textDark">Community</span>
             </div>
 
-            <div className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div className="flex flex-col items-center space-y-3 p-6 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <Compass className="w-8 h-8 text-primary" />
               </div>
@@ -156,7 +156,7 @@ function ContributorCard({
   }
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 p-6 text-center">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 p-6 text-center">
       {/* Rank Badge */}
       <div className="flex justify-center mb-4">
         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-accent text-textDark">

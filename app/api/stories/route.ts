@@ -7,7 +7,7 @@ export async function GET(req: Request) {
     const search = url.searchParams.get("search")?.trim()
     const categoryId = url.searchParams.get("categoryId")
     const locationId = url.searchParams.get("locationId")
-const limit = Number(url.searchParams.get("limit"))
+    const limit = Number(url.searchParams.get("limit"))
 
     const supabase = supabaseServer()
 
@@ -42,7 +42,7 @@ const limit = Number(url.searchParams.get("limit"))
       .order("created_at", { ascending: false })
 
     if (search) {
-      query = query.ilike("title", `%${search}%`)
+      query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`)
     }
 
     if (categoryId && categoryId !== "All") {
@@ -53,8 +53,12 @@ const limit = Number(url.searchParams.get("limit"))
       query = query.eq("location_id", locationId)
     }
 
+    if (limit) {
+      query = query.limit(limit)
+    }
+
     const { data, error } = await query
- if (limit) query = query.limit(limit)
+    
     if (error) {
       console.error("Supabase error:", error)
       return NextResponse.json({ stories: [] }, { status: 200 })

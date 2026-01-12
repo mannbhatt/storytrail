@@ -38,7 +38,8 @@ interface StoryCardProps {
   loading?: boolean
 }
 
-const SWIPE_THRESHOLD = 120
+const SWIPE_THRESHOLD = 80
+const SWIPE_VELOCITY_THRESHOLD = 500
 
 function StoryCard({ story, index, totalCards, onSwipe, isTop, loading = false }: StoryCardProps) {
   const x = useMotionValue(0)
@@ -55,20 +56,31 @@ function StoryCard({ story, index, totalCards, onSwipe, isTop, loading = false }
 
     if (absX > SWIPE_THRESHOLD) {
       onSwipe(xValue > 0 ? "right" : "left")
+    } else {
+      // Snap back to center if not swiped far enough
+      x.set(0)
     }
   }, [onSwipe, x])
 
   if (loading || !story) {
     return (
       <motion.div
-        className="absolute w-full h-full rounded-2xl overflow-hidden shadow-lg"
+        className="absolute w-full h-full rounded-lg overflow-hidden shadow-lg"
         style={{
           scale: cardScale,
           y: cardYOffset,
           zIndex: cardZIndex,
+          cursor: isTop ? "grab" : "default",
         }}
+        drag={isTop ? "x" : false}
+        dragConstraints={{ left: -200, right: 200 }}
+        dragElastic={0.2}
+        dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
+        onDragEnd={handleDragEnd}
+        whileTap={{ scale: 0.95 }}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: cardScale, opacity: 1 }}
+        exit={{ x: 300, opacity: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <div className="relative w-full h-full">
@@ -105,7 +117,7 @@ function StoryCard({ story, index, totalCards, onSwipe, isTop, loading = false }
 
   return (
     <motion.div
-      className="absolute w-full h-full rounded-2xl overflow-hidden shadow-lg"
+      className="absolute w-full h-full rounded-lg overflow-hidden shadow-lg"
       style={{
         x,
         opacity,
@@ -115,11 +127,14 @@ function StoryCard({ story, index, totalCards, onSwipe, isTop, loading = false }
         cursor: isTop ? "grab" : "default",
       }}
       drag={isTop ? "x" : false}
-      dragConstraints={{ left: 0, right: 0 }}
+      dragConstraints={{ left: -200, right: 200 }}
+      dragElastic={0.2}
+      dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
       onDragEnd={handleDragEnd}
+      whileTap={{ scale: 0.95 }}
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: cardScale, opacity: 1 }}
-      exit={{ x: 300, opacity: 0 }}
+      exit={{ x: x.get() > 0 ? 300 : -300, opacity: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       <div className="relative w-full h-full">
@@ -218,6 +233,18 @@ export default function StoriesSwiper() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    // Prevent default touch behavior
+    e.preventDefault()
+  }, [])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    // Prevent scrolling while swiping
+    if (e.touches.length === 1) {
+      e.preventDefault()
+    }
+  }, [])
+
   useEffect(() => {
     const fetchStories = async () => {
       try {
@@ -241,8 +268,16 @@ export default function StoriesSwiper() {
 
   const handleSwipe = useCallback(async (direction: "left" | "right", storyId: number) => {
     try {
-      // Remove the swiped story from the stack
-      setStories(prev => prev.filter(story => story.id !== storyId))
+      // Add haptic feedback if available
+      if (navigator.vibrate) {
+        navigator.vibrate(50)
+      }
+      
+      // Remove swiped story from stack with animation
+      setStories(prev => {
+        const newStories = prev.filter(story => story.id !== storyId)
+        return newStories
+      })
       
       // Here you can add logic to handle swipe action (like/skip)
       // For example, you might want to send an API call to update story's like count
@@ -296,7 +331,7 @@ export default function StoriesSwiper() {
         <p className="text-gray-600 mb-6">Check back later for new travel stories!</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors"
+          className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
           Refresh
         </button>
@@ -305,11 +340,16 @@ export default function StoriesSwiper() {
   }
 
   return (
-    <div className="h-screen relative overflow-hidden bg-gray-100">
+    <div 
+      className="h-screen relative overflow-hidden bg-gray-100"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+    >
       <div className="max-w-md mx-auto h-full flex flex-col">
         <div className="p-4">
           <h1 className="text-2xl font-bold text-center">Discover Stories</h1>
-          <p className="text-center text-gray-600">Swipe right to like, left to skip</p>
+          <p className="text-center text-gray-600 text-sm">Swipe right to like, left to skip</p>
+          <p className="text-center text-gray-500 text-xs mt-1">Drag cards or use touch gestures</p>
         </div>
         
         <div className="flex-1 relative">

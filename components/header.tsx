@@ -102,7 +102,7 @@ useEffect(() => {
                 <X className="w-5 h-5 hover:text-primary" />
               </button>
 
-              <div className="p-4 pt-12">
+              <div className="md:p-4 pt-12">
                 <h2 className="tracking-wide text-xl font-heading font-bold text-primary mb-4">
                   StoryTrail
                 </h2>

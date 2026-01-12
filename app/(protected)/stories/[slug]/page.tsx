@@ -158,7 +158,7 @@ export default function StoryDetailPage({ params }: { params: Promise<{ slug: st
                 {story.title}
               </h1>
 
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+              <p className="text-lg text-gray-600 text-justify mb-6 leading-relaxed">
                 {story.summary}
               </p>
 
@@ -182,7 +182,7 @@ export default function StoryDetailPage({ params }: { params: Promise<{ slug: st
             {/* Story Content */}
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="prose prose-lg max-w-none">
-                <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                <div className="text-gray-800 text-justify leading-relaxed whitespace-pre-wrap">
                   {story.content}
                 </div>
               </div>

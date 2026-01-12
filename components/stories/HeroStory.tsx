@@ -37,7 +37,7 @@ export default function Hero({ search, onSearch }: HeroProps) {
                 value={search}
                 onChange={(e) => onSearch(e.target.value)}
                 placeholder="Search stories, places, cultures or experiences"
-                className="h-12 w-full rounded-full border border-white/15 bg-white/95 pr-12 pl-5 text-sm text-gray-900 shadow-lg outline-none placeholder:text-gray-500 backdrop-blur transition focus:border-accent focus:ring-2 focus:ring-accent/60"
+                className="h-12 w-full rounded-md border border-white/15 bg-white/95 pr-12 pl-5 text-sm text-gray-900 shadow-lg outline-none placeholder:text-gray-500 backdrop-blur transition focus:border-accent focus:ring-2 focus:ring-accent/60"
               />
               <Search className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-600" />
             </div>

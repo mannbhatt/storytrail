@@ -91,7 +91,7 @@ interface PlaceCardSkeletonProps {
 
 function PlaceCardSkeleton({ isMobile = false }: PlaceCardSkeletonProps) {
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md">
       {/* Image Skeleton */}
       <div className="relative aspect-video overflow-hidden bg-slate-200">
         <div className="absolute inset-0 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 animate-pulse" />
@@ -144,7 +144,7 @@ function PlaceCard({
   const router = useRouter();
   return (
     <div
-      className={`bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
+      className={`bg-white rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
         isHovered ? "shadow-2xl -translate-y-1" : "shadow-md hover:shadow-xl"
       }`}
       onClick={() =>

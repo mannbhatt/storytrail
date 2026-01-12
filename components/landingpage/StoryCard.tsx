@@ -103,7 +103,7 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
             <p className="mt-1 text-xs text-gray-500">{story.city}</p>
 
             {/* Subtitle */}
-            <p className="mt-2 line-clamp-3 text-sm text-gray-600">
+            <p className="mt-2 line-clamp-3 text-justify text-sm text-gray-600">
               {story.subtitle}
             </p>
 
@@ -135,9 +135,9 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
         {/* Small Image on Left */}
         <Link
           href={`/stories/${story.slug}`}
-          className="flex gap-3 overflow-hidden rounded-lg bg-white p-3 shadow-md"
+          className="flex  overflow-hidden rounded-lg bg-white  shadow-md"
         >
-          <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md">
+          <div className="relative h-28 w-32 flex-shrink-0 overflow-hidden rounded-lg">
             <Image
               src={story.image || "/placeholder.svg"}
               alt={story.title}
@@ -147,19 +147,20 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
           </div>
 
           {/* Content on Right */}
-          <div className="flex flex-1 flex-col justify-between">
+          <div className="flex flex-1 flex-col p-3 justify-between">
             {/* Title */}
-            <h3 className="font-heading line-clamp-2 text-sm font-bold text-textDark">
+            <h3 className="font-heading line-clamp-2 text-sm font-semibold text-textDark">
               {story.title}
             </h3>
 
             {/* Subtitle */}
-            <p className="hidden lg:block line-clamp-2 text-xs text-gray-600">
+            <p className="  line-clamp-2 text-justify mt-1 text-xs text-gray-600">
               {story.subtitle}
             </p>
 
             {/* City */}
-            <p className="text-xs text-gray-500">{story.city}</p>
+            
+            <p className="text-xs mt-1 text-gray-500">{story.city}</p>
 
             {/* Author Row + Actions (side by side if showActions) */}
             <div

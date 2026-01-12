@@ -51,6 +51,8 @@ export default function StoriesList({
   const [locations, setLocations] = useState<Location[]>([]);
   const { trackSearch, track } = useMixpanel();
 
+  console.log('StoriesList received search prop:', search);
+
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedCity, setSelectedCity] = useState<string>("All");
 
@@ -95,6 +97,8 @@ export default function StoriesList({
         const res = await fetch(`/api/stories?${params.toString()}`, {
           signal: controller.signal,
         });
+
+        console.log('Fetching stories from:', `/api/stories?${params.toString()}`);
 
         if (!res.ok) {
           throw new Error("Failed to fetch stories");
@@ -144,7 +148,7 @@ export default function StoriesList({
                 setSelectedCategory("All");
                 setVisibleCount(PAGE_SIZE);
               }}
-              className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition ${
+              className={`whitespace-nowrap rounded-lg border px-4 py-2 text-sm font-medium transition ${
                 selectedCategory === "All"
                   ? "bg-accent text-black"
                   : "bg-white text-gray-900 hover:bg-gray-100"
@@ -161,7 +165,7 @@ export default function StoriesList({
                   setSelectedCategory(cat.id);
                   setVisibleCount(PAGE_SIZE);
                 }}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition ${
+                className={`whitespace-nowrap rounded-lg border px-4 py-2 text-sm font-medium transition ${
                   selectedCategory === cat.id
                     ? "bg-accent text-black"
                     : "bg-white text-gray-900 hover:bg-gray-100"
@@ -179,7 +183,7 @@ export default function StoriesList({
               setSelectedCity(e.target.value);
               setVisibleCount(PAGE_SIZE);
             }}
-            className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm outline-none focus:border-accent"
           >
             <option value="All">All</option>
             {locations.map((loc) => (
@@ -269,7 +273,7 @@ export default function StoriesList({
               <div className="mt-10 flex justify-center">
                 <button
                   onClick={() => setVisibleCount((p) => p + PAGE_SIZE)}
-                  className="rounded-full bg-accent px-6 py-3 text-black text-sm font-medium text-white transition hover:opacity-90"
+                  className="rounded-lg bg-accent px-6 py-3 text-black text-sm font-medium text-white transition hover:opacity-90"
                 >
                   Load more stories
                 </button>

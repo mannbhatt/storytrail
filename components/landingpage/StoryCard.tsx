@@ -88,7 +88,7 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
               alt={story.title}
               fill
               className="object-cover "
-              unoptimized={true}
+             
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
         {/* Small Image on Left */}
         <Link
           href={`/stories/${story.slug}`}
-          className="flex  overflow-hidden rounded-lg bg-white  shadow-md"
+          className="flex p-2 overflow-hidden gap-2  rounded-lg bg-white  shadow-md"
         >
           <div className="relative h-28 w-32 flex-shrink-0 overflow-hidden rounded-lg">
             <Image
@@ -147,7 +147,7 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
           </div>
 
           {/* Content on Right */}
-          <div className="flex flex-1 flex-col p-3 justify-between">
+          <div className="flex flex-1 flex-col  justify-between">
             {/* Title */}
             <h3 className="font-heading line-clamp-2 text-sm font-semibold text-textDark">
               {story.title}

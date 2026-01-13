@@ -125,7 +125,7 @@ export default function StoryDetailPage({ params }: { params: Promise<{ slug: st
             {/* Cover Image */}
             {story.cover_image && (
               <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
-                <div className="relative aspect-[16/9] w-full">
+                <div className="relative h-48 sm:h-64 md:aspect-[21/9] w-full">
                   <Image
                     src={story.cover_image}
                     alt={story.title}

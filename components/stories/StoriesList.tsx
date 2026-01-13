@@ -49,9 +49,11 @@ export default function StoriesList({
   const [stories, setStories] = useState<any[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
+  const [realTimeSearch, setRealTimeSearch] = useState(search);
   const { trackSearch, track } = useMixpanel();
 
   console.log('StoriesList received search prop:', search);
+  console.log('Real-time search state:', realTimeSearch);
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedCity, setSelectedCity] = useState<string>("All");
@@ -82,8 +84,13 @@ export default function StoriesList({
       try {
         const params = new URLSearchParams();
 
-        if (search?.trim()) {
-          params.set("search", search.trim());
+        // Use realTimeSearch for real-time filtering, it should always be the source of truth
+        const currentSearch = realTimeSearch;
+        console.log('Current search value for API:', `"${currentSearch}"`, 'Length:', currentSearch?.length);
+        console.log('realTimeSearch:', realTimeSearch, 'search prop:', search);
+        
+        if (currentSearch && currentSearch.trim()) {
+          params.set("search", currentSearch.trim());
         }
 
         if (selectedCategory !== "All") {
@@ -94,7 +101,7 @@ export default function StoriesList({
           params.set("locationId", selectedCity);
         }
 
-        const res = await fetch(`/api/stories?${params.toString()}`, {
+        const res = await fetch(`/api/stories?${params.toString()}&_t=${Date.now()}`, {
           signal: controller.signal,
         });
 
@@ -108,11 +115,11 @@ export default function StoriesList({
         setStories(data.stories ?? []);
         
         // Track search and filter events
-        if (search?.trim()) {
-          trackSearch(search.trim(), data.stories?.length || 0);
+        if (currentSearch?.trim()) {
+          trackSearch(currentSearch.trim(), data.stories?.length || 0);
         }
         
-        if ((selectedCategory !== "All" || selectedCity !== "All") && !search?.trim()) {
+        if ((selectedCategory !== "All" || selectedCity !== "All") && !currentSearch?.trim()) {
           track('Filters Applied', {
             category: selectedCategory !== "All" ? selectedCategory : undefined,
             city: selectedCity !== "All" ? selectedCity : undefined,
@@ -131,7 +138,27 @@ export default function StoriesList({
     fetchStories();
 
     return () => controller.abort();
-  }, [search, selectedCategory, selectedCity]);
+  }, [realTimeSearch, search, selectedCategory, selectedCity, trackSearch, track]);
+
+  // Listen for real-time search updates from header
+  useEffect(() => {
+    const handleSearchUpdate = (event: CustomEvent) => {
+      const newSearch = event.detail;
+      console.log('Received search update:', `"${newSearch}"`, 'Type:', typeof newSearch, 'Length:', newSearch?.length);
+      setRealTimeSearch(newSearch);
+    };
+
+    window.addEventListener('searchUpdate', handleSearchUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('searchUpdate', handleSearchUpdate as EventListener);
+    };
+  }, []);
+
+  // Sync realTimeSearch with prop search when it changes
+  useEffect(() => {
+    setRealTimeSearch(search);
+  }, [search]);
 
   const visibleStories = stories.slice(0, visibleCount);
 

@@ -17,7 +17,7 @@ export default function AboutPage() {
       {/* Intro Section */}
       <section className="py-16 lg:py-20 bg-background">
         <div className="container-max">
-          <div className="space-y-6 text-lg leading-relaxed" style={{ color: "var(--color-text)" }}>
+          <div className="space-y-6 text-lg text-justify leading-relaxed" style={{ color: "var(--color-text)" }}>
             <p>
               StoryTrail is more than a travel platform—it&apos;s a digital archive of human experience. Founded on the
               belief that the most meaningful travel comes from understanding the people, cultures, and histories of
@@ -46,7 +46,7 @@ export default function AboutPage() {
             Our Vision
           </h2>
 
-          <div className="space-y-6 text-lg leading-relaxed" style={{ color: "var(--color-text)", opacity: 0.85 }}>
+          <div className="space-y-6 text-lg text-justify leading-relaxed" style={{ color: "var(--color-text)", opacity: 0.85 }}>
             <p>
               We envision a world where every person—regardless of their background or location—can share their story
               and be heard. Where cultural traditions are documented and celebrated, not forgotten. Where travelers
@@ -89,7 +89,7 @@ export default function AboutPage() {
               <h3 className="font-heading text-xl font-semibold mb-3" style={{ color: "var(--color-text)" }}>
                 Preserve Local Heritage
               </h3>
-              <p style={{ color: "var(--color-text)", opacity: 0.7 }}>
+              <p className="text-justify" style={{ color: "var(--color-text)", opacity: 0.7 }}>
                 Cultural traditions and local stories fade without documentation. We create a permanent, accessible
                 record of the places and people that make our world rich.
               </p>
@@ -106,7 +106,7 @@ export default function AboutPage() {
               <h3 className="font-heading text-xl font-semibold mb-3" style={{ color: "var(--color-text)" }}>
                 Connect Authentic Voices
               </h3>
-              <p style={{ color: "var(--color-text)", opacity: 0.7 }}>
+              <p className="text-justify" style={{ color: "var(--color-text)", opacity: 0.7 }}>
                 Travelers are tired of generic itineraries. We connect them directly with locals and historians who
                 share genuine, insider perspectives on places.
               </p>
@@ -123,7 +123,7 @@ export default function AboutPage() {
               <h3 className="font-heading text-xl font-semibold mb-3" style={{ color: "var(--color-text)" }}>
                 Empower Storytellers
               </h3>
-              <p style={{ color: "var(--color-text)", opacity: 0.7 }}>
+              <p className="text-justify" style={{ color: "var(--color-text)", opacity: 0.7 }}>
                 Everyone has a story worth sharing. We remove barriers and make it easy for anyone—regardless of writing
                 experience—to contribute their knowledge and experiences.
               </p>
@@ -156,7 +156,7 @@ export default function AboutPage() {
       {/* Progress line */}
       <div className="hidden md:block absolute top-16 left-1/2 h-1 w-3/4 -translate-x-1/2 bg-gradient-to-r from-primary to-accent"></div>
       
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4">
+      <div className="grid grid-cols-1 text-justify md:grid-cols-4 gap-8 md:gap-4">
         {[
           {
             number: 1,
@@ -203,7 +203,7 @@ export default function AboutPage() {
                 <h3 className="text-xl font-heading font-semibold text-gray-900 mb-3">
                   {step.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 text-justify leading-relaxed">
                   {step.description}
                 </p>
               </div>

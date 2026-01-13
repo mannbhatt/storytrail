@@ -145,7 +145,7 @@ function StoryCard({ story, index, totalCards, onSwipe, isTop, loading = false }
           fill
           className="object-cover"
           priority
-          unoptimized
+        
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
         

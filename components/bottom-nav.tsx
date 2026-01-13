@@ -1,6 +1,6 @@
 "use client"
 import { useAuth } from "@/components/providers/AuthProvider"
-import { Home, Search, PlusCircle,BookOpen, User } from "lucide-react"
+import { Home, Search, PlusCircle,BookOpen,Store, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -15,9 +15,10 @@ if (loading) return null;
  
   const navItems = [
     { id: "home", label: "Home", icon: Home, href: "/" },
-    { id: "feed", label: "Feed", icon: Search, href: "/story-swiper" },
-    { id: "create", label: "Create", icon: PlusCircle, href: "/write-story" },
     { id: "stories", label: "Stories", icon:BookOpen , href: "/stories" },
+    { id: "create", label: "Create", icon: PlusCircle, href: "/write-story" },
+    { id: "about", label: "About", icon: Store, href: "/about" },
+    
     userItem,
   ]
 	

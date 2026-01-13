@@ -1,10 +1,9 @@
 "use client";
 
 import { useAuth } from "@/components/providers/AuthProvider"
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Home,Search, X, Menu, User, Pen, BookOpen, ChevronRight, Store } from "lucide-react";
 
 
@@ -12,13 +11,55 @@ export default function TripotoHeader() {
   const { session, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('search') || '';
+    }
+    return '';
+  });
   const router = useRouter();
+  const pathname = usePathname();
 
-  const handleSearch = (e: React.FormEvent) => {
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    (value: string) => {
+      if (pathname === '/stories') {
+        // Update URL without full page refresh
+        const url = new URL(window.location.href);
+        if (value.trim()) {
+          url.searchParams.set('search', value.trim());
+        } else {
+          url.searchParams.delete('search');
+        }
+        window.history.replaceState({}, '', url.toString());
+        
+        // Trigger StoriesList re-render by dispatching custom event
+        window.dispatchEvent(new CustomEvent('searchUpdate', { detail: value }));
+      }
+    },
+    [pathname]
+  );
+
+  // Debounce effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      debouncedSearch(searchQuery);
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, debouncedSearch]);
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/stories?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push('/stories');
     }
   };
 useEffect(() => {
@@ -73,12 +114,12 @@ useEffect(() => {
 
           {/* Mobile Search Bar */}
           <div className="px-2 pb-2">
-            <form onSubmit={handleSearch} className="relative">
+            <form onSubmit={handleSearchSubmit} className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="w-full bg-white font-body text-textDark rounded-md px-10 py-2 text-sm shadow-sm focus:ring-2 focus:ring-primaryDark outline-none"
                 placeholder="Search stories..."
               />
@@ -102,7 +143,7 @@ useEffect(() => {
                 <X className="w-5 h-5 hover:text-primary" />
               </button>
 
-              <div className="md:p-4 pt-12">
+              <div className="px-4 md:p-4 pt-12">
                 <h2 className="tracking-wide text-xl font-heading font-bold text-primary mb-4">
                   StoryTrail
                 </h2>
@@ -156,6 +197,9 @@ useEffect(() => {
             </Link>
            </span>
             </nav>
+
+         
+
             <span className=" flex items-center gap-2 font-medium ">
             { session ? (<Link href="/profile" className="flex items-center text-white hover:text-accent transition">
               <User className="w-4 h-4  text-white mr-1" />  Profile

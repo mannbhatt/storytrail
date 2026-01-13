@@ -135,9 +135,9 @@ export default function StoryCard({ story, loading = false }: StoryCardProps) {
         {/* Small Image on Left */}
         <Link
           href={`/stories/${story.slug}`}
-          className="flex p-2 overflow-hidden gap-2  rounded-lg bg-white  shadow-md"
+          className="flex p-2 overflow-hidden gap-3  rounded-lg bg-white  shadow-md"
         >
-          <div className="relative h-28 w-32 flex-shrink-0 overflow-hidden rounded-lg">
+          <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg">
             <Image
               src={story.image || "/placeholder.svg"}
               alt={story.title}
